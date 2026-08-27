@@ -1,0 +1,36 @@
+name: build-windows
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest
+      - run: pyinstaller --noconfirm --clean otpigeon.spec
+      - shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release/OTPigeon | Out-Null
+          Copy-Item dist/OTPigeon.exe, LICENSE, README.md, THIRD_PARTY_NOTICES.md release/OTPigeon/
+          Copy-Item guide release/OTPigeon/guide -Recurse
+          Copy-Item docs release/OTPigeon/docs -Recurse
+          Copy-Item shortcuts release/OTPigeon/shortcuts -Recurse
+          Copy-Item licenses release/OTPigeon/licenses -Recurse
+          Compress-Archive -Path release/OTPigeon -DestinationPath release/OTPigeon-windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OTPigeon-windows-x64
+          path: release/OTPigeon-windows-x64.zip
+          if-no-files-found: error
