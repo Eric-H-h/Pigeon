@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "package": "python-zeroconf",
+      "version": "0.150.0",
+      "filename": "zeroconf-0.150.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/09/ea/34bb185645ecaa18d34e5883bffea71aa9bffbbb994634884e8b2f3ad0c4/zeroconf-0.150.0.tar.gz",
+      "sha256": "a5fe7feab1de6ef5e541e0a3d07e534fd91629b813fc27281593584100f63164",
+      "license": "LGPL-2.1-or-later"
+    }
+  ]
+}

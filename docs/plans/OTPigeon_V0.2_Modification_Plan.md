@@ -786,8 +786,8 @@ SmartScreen 问题不会阻止技术验收，但会影响公开分发体验，�
 
 ### 当前项目证据
 
-- [`otp_bridge.py`](./otp_bridge.py)：当前真实 PoC 实现。
-- [`iPhone_Windows_OTP_Bridge_Codex_Handoff.md`](./iPhone_Windows_OTP_Bridge_Codex_Handoff.md)：已经验证的个人链路、原方案和历史约束。
+- [`legacy/otp_bridge_poc.py`](../../legacy/otp_bridge_poc.py)：脱敏归档的 PoC 实现。
+- [`iPhone_Windows_OTP_Bridge_Codex_Handoff.md`](../archive/iPhone_Windows_OTP_Bridge_Codex_Handoff.md)：已经验证的个人链路、原方案和历史约束。
 
 ### 官方与上游资料
 

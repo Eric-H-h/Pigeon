@@ -28,6 +28,8 @@ IP 改变后，Windows 会在当前私有网络接口上重新发布这个名称
 
 Windows 热点是默认推荐路径，因为网络边界更清楚。家庭 Wi-Fi 也可以使用，但必须是受信任的私有网络，并且路由器不能隔离设备。
 
+下载发行包时先阅读 [QUICKSTART.md](QUICKSTART.md)。Alpha EXE 尚未代码签名，SmartScreen 可能提示风险；请先核对 GitHub Release 附带的 SHA-256，不要关闭 SmartScreen。
+
 ## 从源码运行
 
 要求：Windows 10/11、Python 3.10–3.12。
@@ -80,21 +82,34 @@ Windows 剪贴板（请求排除历史记录与云同步）
 
 ## 文档
 
+- [快速开始](QUICKSTART.md)
+- [Alpha 发布说明](RELEASE_NOTES.md)
 - [iPhone 快捷指令图文指南](guide/iphone-shortcuts.html)
 - [故障排查](docs/troubleshooting.md)
 - [架构与设计取舍](docs/architecture.md)
 - [开发历史与旧版迁移](docs/development-history.md)
 - [从源码开发与测试](docs/development.md)
+- [LGPL 源码与重建说明](docs/lgpl-rebuild.md)
 
 ## 开发
 
 ```powershell
-.venv\Scripts\python -m pip install -e ".[dev]"
+$env:SKIP_CYTHON = "1"
+.venv\Scripts\python -m pip install -r requirements-build.lock
+.venv\Scripts\python -m pip install --no-build-isolation --no-deps -e .
 .venv\Scripts\python -m pytest
 .venv\Scripts\pyinstaller otpigeon.spec
 ```
 
 详见[开发说明](docs/development.md)。
+
+## 卸载
+
+1. 在 OTPigeon 窗口选择 `Exit`。
+2. 删除解压出的 OTPigeon 文件夹或 `OTPigeon.exe`。
+3. 删除 `%LOCALAPPDATA%\OTPigeon`，清除安装 ID 与配对 token。
+4. 在 iPhone 删除 `Send to OTPigeon` Shortcut 和对应的 Message Personal Automation。
+5. 如 Windows 防火墙中仍有 OTPigeon 允许项，可在“允许应用通过防火墙”中移除。
 
 ## License
 

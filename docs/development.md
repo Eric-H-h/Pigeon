@@ -8,9 +8,13 @@
 
 ```powershell
 py -3.12 -m venv .venv
-.venv\Scripts\python -m pip install -e ".[dev]"
+$env:SKIP_CYTHON = "1"
+.venv\Scripts\python -m pip install -r requirements-build.lock
+.venv\Scripts\python -m pip install --no-build-isolation --no-deps -e .
 .venv\Scripts\python -m pytest
 ```
+
+官方构建在安装锁定依赖时设置 `SKIP_CYTHON=1`，使用源码构建纯 Python zeroconf。发行材料与替换库流程见 [lgpl-rebuild.md](lgpl-rebuild.md)。
 
 ## 本地运行
 
@@ -37,6 +41,8 @@ py -3.12 -m venv .venv
 - `LICENSE`
 - `THIRD_PARTY_NOTICES.md`
 - `README.md`
+- `QUICKSTART.md`
+- `RELEASE_NOTES.md`
 - `guide\iphone-shortcuts.html`
 
 ## 发布前门槛

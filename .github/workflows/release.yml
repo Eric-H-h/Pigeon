@@ -12,25 +12,80 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          python-version: "3.12"
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.10"
           cache: pip
-      - run: python -m pip install -e ".[dev]"
+          cache-dependency-path: requirements-build.lock
+      - run: python -m pip install -r requirements-build.lock
+        env:
+          SKIP_CYTHON: "1"
+      - run: python -m pip install --no-build-isolation --no-deps -e .
       - run: python -m pytest
+      - run: python scripts/check_docs.py
       - run: pyinstaller --noconfirm --clean otpigeon.spec
       - shell: pwsh
         run: |
           New-Item -ItemType Directory -Force release/OTPigeon | Out-Null
-          Copy-Item dist/OTPigeon.exe, LICENSE, README.md, THIRD_PARTY_NOTICES.md release/OTPigeon/
+          Copy-Item dist/OTPigeon.exe, LICENSE, README.md, QUICKSTART.md, RELEASE_NOTES.md, SECURITY.md, THIRD_PARTY_NOTICES.md release/OTPigeon/
           Copy-Item guide release/OTPigeon/guide -Recurse
           Copy-Item docs release/OTPigeon/docs -Recurse
           Copy-Item shortcuts release/OTPigeon/shortcuts -Recurse
           Copy-Item licenses release/OTPigeon/licenses -Recurse
+          New-Item -ItemType Directory -Force release/OTPigeon/third-party-source | Out-Null
+          python scripts/fetch_third_party_sources.py release/OTPigeon/third-party-source
+          git archive --format=zip --output=release/OTPigeon/third-party-source/otpigeon-source.zip HEAD
           Compress-Archive -Path release/OTPigeon -DestinationPath release/OTPigeon-windows-x64.zip
-      - uses: actions/upload-artifact@v4
+          $hash = (Get-FileHash -Algorithm SHA256 release/OTPigeon-windows-x64.zip).Hash.ToLowerInvariant()
+          "$hash  OTPigeon-windows-x64.zip" | Set-Content -Encoding ascii release/OTPigeon-windows-x64.zip.sha256
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: OTPigeon-windows-x64
-          path: release/OTPigeon-windows-x64.zip
+          path: |
+            release/OTPigeon-windows-x64.zip
+            release/OTPigeon-windows-x64.zip.sha256
+            RELEASE_NOTES.md
           if-no-files-found: error
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: OTPigeon-windows-x64
+          path: release-assets
+      - name: Verify release archive
+        shell: pwsh
+        run: |
+          $expected = (Get-Content release-assets/OTPigeon-windows-x64.zip.sha256).Split()[0]
+          $actual = (Get-FileHash -Algorithm SHA256 release-assets/OTPigeon-windows-x64.zip).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) {
+            throw "Release archive SHA-256 mismatch: expected $expected, got $actual"
+          }
+      - name: Create or update draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $assets = @(
+            "release-assets/OTPigeon-windows-x64.zip",
+            "release-assets/OTPigeon-windows-x64.zip.sha256"
+          )
+          $isDraft = gh release view $tag --json isDraft --jq '.isDraft' 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            if ($isDraft -ne "true") {
+              throw "Refusing to replace assets on published release $tag"
+            }
+            gh release upload $tag $assets --clobber
+          } else {
+            gh release create $tag $assets --draft --title "OTPigeon $tag" --notes-file release-assets/RELEASE_NOTES.md
+          }
