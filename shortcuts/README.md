@@ -1,8 +1,8 @@
 # iPhone Shortcut
 
-OTPigeon 需要两部分：
+Pigeon 需要两部分：
 
-1. 可导出分享的普通 Shortcut：`Send to OTPigeon`；
+1. 可导出分享的普通 Shortcut：`Send to Pigeon`；
 2. 每个用户必须在自己 iPhone 上创建的 Message Personal Automation。
 
 iOS 不允许把个人自动化触发器随普通 Shortcut 一起分享，因此仓库不能提供“一键完成全部设置”的文件。

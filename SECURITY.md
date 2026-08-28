@@ -10,14 +10,14 @@
 
 请勿在公开 issue 中提交：
 
-- `%LOCALAPPDATA%\OTPigeon\config.json`；
+- `%LOCALAPPDATA%\Pigeon\config.json`；
 - Pairing token；
 - 真实短信或验证码；
 - 包含个人手机号、通知内容或账号信息的截图。
 
 ## Security boundary
 
-OTPigeon 的目标是阻止同一局域网中的偶然请求，并避免把验证码持久化；它不是互联网暴露的认证服务。
+Pigeon 的目标是阻止同一局域网中的偶然请求，并避免把验证码持久化；它不是互联网暴露的认证服务。
 
 - 服务监听本机所有 IPv4 接口，依赖随机配对令牌鉴权。
 - 传输使用局域网 HTTP，没有 TLS。攻击者若能监听当前网络，理论上可看到请求内容。

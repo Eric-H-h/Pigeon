@@ -9,12 +9,12 @@ from .clipboard import ClipboardError
 from .i18n import LANGUAGE_NAMES, text, translate_event, translate_status
 
 
-PROJECT_URL = "https://github.com/Eric-H-h/OTPigeon"
-PROJECT_URL_DISPLAY = "github.com/Eric-H-h/OTPigeon"
+PROJECT_URL = "https://github.com/Eric-H-h/Pigeon"
+PROJECT_URL_DISPLAY = "github.com/Eric-H-h/Pigeon"
 AUTHOR_CREDIT = "@eric"
 
 
-class OTPigeonWindow:
+class PigeonWindow:
     def __init__(self, root: tk.Tk, controller: Any) -> None:
         self.root = root
         self.controller = controller
@@ -251,5 +251,5 @@ class OTPigeonWindow:
 
 def run_ui(controller: Any) -> None:
     root = tk.Tk()
-    OTPigeonWindow(root, controller)
+    PigeonWindow(root, controller)
     root.mainloop()

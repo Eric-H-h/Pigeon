@@ -16,7 +16,7 @@ DEFAULT_PORT = 8765
 
 
 class ConfigError(RuntimeError):
-    """Raised when an existing OTPigeon configuration is invalid."""
+    """Raised when an existing Pigeon configuration is invalid."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,6 +31,13 @@ class AppConfig:
 def default_config_path() -> Path:
     local_app_data = os.environ.get("LOCALAPPDATA")
     if local_app_data:
+        return Path(local_app_data) / "Pigeon" / "config.json"
+    return Path.home() / "AppData" / "Local" / "Pigeon" / "config.json"
+
+
+def legacy_config_path() -> Path:
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if local_app_data:
         return Path(local_app_data) / "OTPigeon" / "config.json"
     return Path.home() / "AppData" / "Local" / "OTPigeon" / "config.json"
 
@@ -38,19 +45,28 @@ def default_config_path() -> Path:
 class ConfigStore:
     def __init__(self, path: Path | None = None) -> None:
         self.path = path or default_config_path()
+        self._legacy_path = legacy_config_path() if path is None else None
 
     def load_or_create(self) -> AppConfig:
         if not self.path.exists():
+            if self._legacy_path and self._legacy_path.exists():
+                config = self._read(self._legacy_path)
+                self.save(config)
+                return config
             config = self._new_config()
             self.save(config)
             return config
 
+        return self._read(self.path)
+
+    def _read(self, path: Path) -> AppConfig:
+
         try:
-            data = json.loads(self.path.read_text(encoding="utf-8"))
+            data = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
             raise ConfigError(
-                f"Configuration is unreadable: {self.path}. "
-                "Move or delete it, then restart OTPigeon."
+                f"Configuration is unreadable: {path}. "
+                "Move or delete it, then restart Pigeon."
             ) from exc
 
         return self._validate(data)

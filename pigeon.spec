@@ -1,5 +1,5 @@
 a = Analysis(
-    ["run_otpigeon.py"],
+    ["run_pigeon.py"],
     pathex=["src"],
     binaries=[],
     datas=[],
@@ -19,7 +19,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="OTPigeon",
+    name="Pigeon",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

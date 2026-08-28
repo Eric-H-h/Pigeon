@@ -98,7 +98,7 @@ class BridgeServer:
         bridge = self
 
         class Handler(BaseHTTPRequestHandler):
-            server_version = "OTPigeon"
+            server_version = "Pigeon"
             sys_version = ""
 
             def setup(self) -> None:
@@ -110,7 +110,7 @@ class BridgeServer:
                     self._send_text(403, "Private network clients only")
                     return
                 if urlsplit(self.path).path == "/health":
-                    self._send_text(200, "OTPigeon OK")
+                    self._send_text(200, "Pigeon OK")
                 else:
                     self._send_text(404, "Not Found")
 

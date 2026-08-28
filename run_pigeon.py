@@ -1,3 +1,5 @@
+"""Run the Pigeon desktop application from source."""
+
 from otpigeon.main import main
 
 

@@ -3,13 +3,13 @@ requires = ["setuptools==84.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "otpigeon"
-version = "0.2.0a8"
+name = "pigeon"
+version = "0.2.0a9"
 description = "Local-first iPhone to Windows OTP clipboard bridge"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-authors = [{ name = "OTPigeon contributors" }]
+authors = [{ name = "Pigeon contributors" }]
 dependencies = [
   "ifaddr==0.2.0",
 ]
@@ -30,7 +30,7 @@ dev = [
 ]
 
 [project.gui-scripts]
-otpigeon = "otpigeon.main:main"
+pigeon = "otpigeon.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

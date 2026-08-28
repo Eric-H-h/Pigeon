@@ -1,11 +1,11 @@
-# OTPigeon V0.2 完整修改方案（历史设计记录）
+# Pigeon V0.2 完整修改方案（历史设计记录）
 
 > 本文记录 Alpha 1–5 阶段的 mDNS 设计推演，不再代表当前实现。V0.2.0 Alpha 6 已根据真机联调结果切换为窗口直接显示当前数字 IP；当前使用说明以仓库根目录 README 和 QUICKSTART 为准。
 
 > 文档状态：已执行本地实现；等待 iPhone 真机门槛与 GitHub 远端授权
 > 制定日期：2026-08-27  
 > 执行快照：2026-08-28
-> 项目名称：OTPigeon  
+> 项目名称：Pigeon  
 > 当前目标版本：V0.2 可分享 MVP  
 > iPhone 验证基线：iOS 18.4.1  
 
@@ -16,9 +16,9 @@
 V0.2 不再验证“能不能做到”，而是解决“其他人能不能安全、稳定地装起来并长期使用”。最终希望普通用户只经历一次安装和配置：
 
 ```text
-下载 OTPigeon.exe
+下载 Pigeon.exe
 → 双击运行
-→ 安装 Send to OTPigeon Shortcut
+→ 安装 Send to Pigeon Shortcut
 → 手动创建一次 Message Personal Automation
 → 以后收到验证码时直接在 Windows Ctrl+V
 ```
@@ -29,7 +29,7 @@ V0.2 不再验证“能不能做到”，而是解决“其他人能不能安全
 
 ### 2.1 隐私边界
 
-OTPigeon 运行时保持零云端：
+Pigeon 运行时保持零云端：
 
 - 短信正文和 OTP 不发送给云服务器、LLM、分析平台或第三方接口。
 - Windows 只在内存中处理短信，不保存完整短信历史。
@@ -98,7 +98,7 @@ iPhone_Windows_OTP_Bridge_Codex_Handoff.md
 
 ### 4.1 Windows
 
-1. 用户从 GitHub Release 下载 `OTPigeon.exe`。
+1. 用户从 GitHub Release 下载 `Pigeon.exe`。
 2. 第一次运行时，程序创建本机配置和随机 Token。
 3. Windows 防火墙提示出现时，用户只允许 Private Network。
 4. GUI 显示运行状态、稳定局域网名称、数字地址候选和掩码 Token。
@@ -114,14 +114,14 @@ http://otpigeon-a1b2c3d4.local:8765
 
 ### 4.2 iPhone
 
-1. 用户安装 `Send to OTPigeon` 普通 Shortcut。
+1. 用户安装 `Send to Pigeon` 普通 Shortcut。
 2. 导入时填写：
    - `PC Address`：稳定的 `.local` 地址；
    - `Pairing Token`：Windows GUI 显示的随机 Token。
 3. 用户手动创建 Message Personal Automation：
    - Message Contains：`验证码`；
    - Run Immediately；
-   - Run Shortcut：`Send to OTPigeon`；
+   - Run Shortcut：`Send to Pigeon`；
    - Input：`Shortcut Input`。
 4. 用户手动运行一次 Shortcut 做连接测试。
 5. 后续收到短信时，Shortcut 在后台发送正文，Windows 自动复制 OTP。
@@ -231,7 +231,7 @@ mDNS 必须先通过一个独立的小实验，再进入正式实现。实验不
 首次运行使用 `secrets` 生成至少 128 位随机 Token。配置保存到：
 
 ```text
-%LOCALAPPDATA%\OTPigeon\config.json
+%LOCALAPPDATA%\Pigeon\config.json
 ```
 
 选择 `LOCALAPPDATA` 而不是漫游的 `APPDATA`，因为 Token 和设备 ID 都属于当前电脑，不应随账号漫游到其他机器。
@@ -354,7 +354,7 @@ V0.2 不承诺字母数字混合码。`123-456` 是否支持由测试样本决�
 
 ```text
 GET /health
-→ 200 OTPigeon OK
+→ 200 Pigeon OK
 ```
 
 保持无认证，便于用户判断网络和防火墙是否连通。它只暴露本地服务存在，不返回 Token、配置或地址清单。
@@ -416,13 +416,13 @@ GUI 主线程不得运行 HTTP Server 或网络轮询。后台状态通过线程
 普通 Shortcut 名称：
 
 ```text
-Send to OTPigeon
+Send to Pigeon
 ```
 
 导入问题：
 
-1. `What is your OTPigeon PC address?`
-2. `What is your OTPigeon pairing token?`
+1. `What is your Pigeon PC address?`
+2. `What is your Pigeon pairing token?`
 
 主流程：
 
@@ -444,7 +444,7 @@ Send to OTPigeon
 
 GitHub 同时提供：
 
-- Apple 导出的 `Send to OTPigeon.shortcut` 文件；
+- Apple 导出的 `Send to Pigeon.shortcut` 文件；
 - 可选 iCloud 分享链接；
 - `shortcuts/README.md` 中的逐动作复现说明。
 
@@ -463,7 +463,7 @@ otpigeon/
 │  ├─ test_server.py
 │  └─ test_network.py
 ├─ shortcuts/
-│  ├─ Send to OTPigeon.shortcut
+│  ├─ Send to Pigeon.shortcut
 │  └─ README.md
 ├─ docs/
 │  ├─ iphone-setup.md
@@ -475,7 +475,7 @@ otpigeon/
 │  ├─ test.yml
 │  └─ release.yml
 ├─ pyproject.toml
-├─ otpigeon.spec
+├─ pigeon.spec
 ├─ README.md
 ├─ SECURITY.md
 ├─ THIRD_PARTY_NOTICES.md
@@ -489,7 +489,7 @@ otpigeon/
 |---|---|
 | `otp_bridge.py` | 作为行为基线使用；实施时由测试覆盖后迁移到 `src/otpigeon/`，不长期保留两套运行入口 |
 | `iPhone_Windows_OTP_Bridge_Codex_Handoff.md` | 脱敏、删除面向 Codex 的直接指令，整理为 `docs/development-history.md` |
-| `OTPigeon_V0.2_Modification_Plan.md` | 执行阶段移动为 `docs/v0.2-modification-plan.md`，保留决策和验收依据 |
+| `Pigeon_V0.2_Modification_Plan.md` | 执行阶段移动为 `docs/v0.2-modification-plan.md`，保留决策和验收依据 |
 
 ### 11.3 第一次 Git 提交前的秘密处理
 
@@ -526,7 +526,7 @@ otpigeon/
 - HTTP 明文只适用于可信局域网的说明。
 - SmartScreen 预期提示。
 - 常见问题：无法访问、Token 错误、没有识别 OTP、公共网络隔离、数字地址变化。
-- 卸载方式：退出程序并删除 EXE、删除 `%LOCALAPPDATA%\OTPigeon`、删除 Shortcut 和 Personal Automation。
+- 卸载方式：退出程序并删除 EXE、删除 `%LOCALAPPDATA%\Pigeon`、删除 Shortcut 和 Personal Automation。
 
 ## 12. 打包和发布方案
 
@@ -554,7 +554,7 @@ V0.2 使用 PyInstaller 构建 Windows x64 单 EXE：
 `release.yml`：
 
 - 只在版本 Tag 或手动触发时构建；
-- 生成 `OTPigeon-v0.2.0-windows-x64.zip`；
+- 生成 `Pigeon-v0.2.0-windows-x64.zip`；
 - ZIP 包含 EXE、LICENSE、THIRD_PARTY_NOTICES 和简短安装说明；
 - 生成 SHA-256；
 - 默认创建 Draft Release，人工检查后发布。

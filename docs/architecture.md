@@ -27,7 +27,7 @@ Message Personal Automation
 
 ## 为什么直接使用数字 IP
 
-V0.2.0 Alpha 8 不发布或解析 `.local` 名称。原因不是数字 IP 永远不变，而是数字 IP 更容易观察和验证：Windows 窗口显示的地址就是 iPhone 实际请求的目标，不再经过 mDNS、系统 DNS 或代理 Fake-IP。
+V0.2.0 Alpha 9 不发布或解析 `.local` 名称。原因不是数字 IP 永远不变，而是数字 IP 更容易观察和验证：Windows 窗口显示的地址就是 iPhone 实际请求的目标，不再经过 mDNS、系统 DNS 或代理 Fake-IP。
 
 网络监视器每 5 秒重新枚举地址。只接受 RFC1918 范围：`10.0.0.0/8`、`172.16.0.0/12`、`192.168.0.0/16`；回环、APIPA、测试网段和公网地址不会出现在连接列表中。
 
@@ -39,7 +39,7 @@ V0.2.0 Alpha 8 不发布或解析 `.local` 名称。原因不是数字 IP 永远
 
 ```text
 Windows 当前连接：Private / 专用网络
-OTPigeon 防火墙权限：Private / 专用网络
+Pigeon 防火墙权限：Private / 专用网络
 Public / 公用网络：不允许
 ```
 

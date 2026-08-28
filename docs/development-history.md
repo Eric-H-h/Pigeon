@@ -17,7 +17,7 @@ PoC 的主要限制是：
 
 ## V0.2 Alpha 1–5
 
-V0.2 命名为 **OTPigeon**，把 PoC 拆为可测试模块。早期 Alpha 1–5 曾尝试使用每次安装独立的 `.local` 名称，并保留数字地址兜底。
+V0.2 将产品名统一为 **Pigeon**，并把 PoC 拆为可测试模块。早期 Alpha 1–5 曾尝试使用每次安装独立的 `.local` 名称，并保留数字地址兜底。
 
 ## V0.2 Alpha 6
 
@@ -26,7 +26,7 @@ V0.2 命名为 **OTPigeon**，把 PoC 拆为可测试模块。早期 Alpha 1–5
 - 直接显示当前私有 IPv4 地址，不再发布 mDNS 名称；
 - 每 5 秒监视接口变化并刷新窗口；
 - IP 变化后只更新普通 Shortcut 的 URL，个人自动化不重建；
-- 明确要求 Windows 网络和 OTPigeon 防火墙都使用“专用网络”；
+- 明确要求 Windows 网络和 Pigeon 防火墙都使用“专用网络”；
 - 随机持久化 token 和重新生成操作；
 - JSON、长度和 Content-Type 限制；
 - Windows 剪贴板历史/云同步排除标记；

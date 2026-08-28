@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OTPigeon · iPhone Shortcuts 配置指南（iOS 18.4.1）</title>
-  <meta name="description" content="按 iOS 18.4.1 英文 Shortcuts 界面，逐步配置 Send to OTPigeon 与 Message Personal Automation。">
+  <title>Pigeon · iPhone Shortcuts 配置指南（iOS 18.4.1）</title>
+  <meta name="description" content="按 iOS 18.4.1 英文 Shortcuts 界面，逐步配置 Send to Pigeon 与 Message Personal Automation。">
   <style>
     :root {
       --ink: #1c1917;
@@ -594,7 +594,7 @@
           <path fill="#fafaf9" d="M7.5 19c3.8-7.2 11.2-9.2 15.5-5.2-1.7.8-2.8 2.4-3.1 4.2 2.6.1 5.3 1.6 6.6 4.2-5.2.8-9.7-.3-12.8-2.4-1.6 1.7-3.5 2.7-5.7 3 1-1.4 1.1-2.6-.5-3.8z"/>
         </svg>
         <span>
-          <span class="brand-name">OTPigeon</span><br>
+          <span class="brand-name">Pigeon</span><br>
           <span class="brand-sub">iPhone 配置指南 · iOS 18.4.1</span>
         </span>
       </a>
@@ -646,7 +646,7 @@
       <tbody>
         <tr>
           <td>普通 Shortcut</td>
-          <td><span class="mono">Send to OTPigeon</span></td>
+          <td><span class="mono">Send to Pigeon</span></td>
           <td>把短信正文 POST 到电脑的 <span class="mono">/otp</span></td>
           <td>可以。别人导入时填自己的地址和 Token。</td>
         </tr>
@@ -664,12 +664,12 @@
     <ul class="checklist">
       <li>iPhone 系统为 iOS 18.4.1 或同代 Shortcuts。本页按 18.4.1 英文界面。</li>
       <li>iPhone 已连上 Windows 热点，或同一台可信的家庭路由器。不要依赖酒店、校园、公司访客 Wi-Fi。</li>
-      <li>Windows 上 OTPigeon / OTP Bridge 已经在运行。</li>
+      <li>Windows 上 Pigeon 已经在运行。</li>
       <li>准备两样从电脑复制的值：<strong>Shortcut URL</strong> 和 <strong>Pairing token</strong>。</li>
     </ul>
     <div class="chips">
       <span class="chip"><span class="mono">验证码</span><button type="button" data-copy="验证码">复制</button></span>
-      <span class="chip"><span class="mono">Send to OTPigeon</span><button type="button" data-copy="Send to OTPigeon">复制</button></span>
+      <span class="chip"><span class="mono">Send to Pigeon</span><button type="button" data-copy="Send to Pigeon">复制</button></span>
       <span class="chip"><span class="mono">token</span><button type="button" data-copy="token">复制</button></span>
       <span class="chip"><span class="mono">text</span><button type="button" data-copy="text">复制</button></span>
       <span class="chip"><span class="mono">/otp</span><button type="button" data-copy="/otp">复制</button></span>
@@ -679,12 +679,12 @@
       <div class="step-copy">
         <div class="step-index">STEP 0</div>
         <h3>先用 Safari 确认手机能访问电脑</h3>
-        <p>还不要做 Shortcut。复制 OTPigeon 窗口中的完整 URL，把末尾 <span class="mono">/otp</span> 临时替换为 <span class="mono">/health</span>，再在 iPhone Safari 打开：</p>
+        <p>还不要做 Shortcut。复制 Pigeon 窗口中的完整 URL，把末尾 <span class="mono">/otp</span> 临时替换为 <span class="mono">/health</span>，再在 iPhone Safari 打开：</p>
         <p class="mono">http://你的PC地址:8765/health</p>
         <p>页面出现 <span class="mono">OK</span> 字样就可以往下走。这一步能排除「根本没连上」：热点、防火墙、地址填错，都会在这里暴露。</p>
         <div class="warn">
           <strong>还没 OK？先别配 Shortcuts</strong>
-          确认 iPhone 与电脑在同一可信局域网，Windows 当前连接和 OTPigeon 防火墙权限都使用专用网络，并且地址没有写成 127.0.0.1。如果只有切成公用网络才成功，说明防火墙权限勾反了。
+          确认 iPhone 与电脑在同一可信局域网，Windows 当前连接和 Pigeon 防火墙权限都使用专用网络，并且地址没有写成 127.0.0.1。如果只有切成公用网络才成功，说明防火墙权限勾反了。
         </div>
       </div>
       <figure class="device">
@@ -692,7 +692,7 @@
           <div class="island"></div>
           <div class="ios-body sheet">
             <div class="safari-bar"><span class="mono">http://PC_ADDRESS:8765/health</span></div>
-            <div class="health">OTPigeon OK</div>
+            <div class="health">Pigeon OK</div>
             <p class="muted" style="text-align:center;font-size:12px;margin-top:14px;">当前 PoC 也可能显示 OTP Bridge OK</p>
           </div>
           <div class="home-bar"></div>
@@ -702,7 +702,7 @@
     </div>
 
     <h2 id="shortcut">第一部分：创建普通 Shortcut</h2>
-    <p>先做出 <span class="mono">Send to OTPigeon</span>。以后 Message 自动化只负责「在收到短信时运行它」。iPhone 不解析验证码，解析留在 Windows。</p>
+    <p>先做出 <span class="mono">Send to Pigeon</span>。以后 Message 自动化只负责「在收到短信时运行它」。iPhone 不解析验证码，解析留在 Windows。</p>
 
     <div class="step">
       <div class="step-copy">
@@ -742,10 +742,10 @@
       <div class="step-copy">
         <div class="step-index">STEP 2</div>
         <h3>改名，并加入三个动作</h3>
-        <p>点顶部名称，改成 <span class="mono">Send to OTPigeon</span>。底部搜索栏依次加入：</p>
+        <p>点顶部名称，改成 <span class="mono">Send to Pigeon</span>。底部搜索栏依次加入：</p>
         <ol class="checklist">
           <li><strong class="ui" data-en="Text" data-zh="文本">Text</strong>：内容选变量 <span class="ui" data-en="Shortcut Input" data-zh="快捷指令输入">Shortcut Input</span>。不要手打短信。</li>
-          <li><strong>URL</strong>：直接粘贴 OTPigeon 窗口“快捷指令 URL”框中的完整内容；它已经以 <span class="mono">/otp</span> 结尾。</li>
+          <li><strong>URL</strong>：直接粘贴 Pigeon 窗口“快捷指令 URL”框中的完整内容；它已经以 <span class="mono">/otp</span> 结尾。</li>
           <li><strong class="ui" data-en="Get Contents of URL" data-zh="获取 URL 内容">Get Contents of URL</strong>：下一步再展开改 POST。</li>
         </ol>
         <p>URL 的最终形态必须是下面这样。不要再次添加 <span class="mono">http://</span> 或 <span class="mono">/otp</span>：</p>
@@ -761,7 +761,7 @@
           <div class="ios-body sheet scroll">
             <div class="nav-sheet">
               <span class="left chev">‹</span>
-              <span class="mid mono" style="font-size:13px">Send to OTPigeon</span>
+              <span class="mid mono" style="font-size:13px">Send to Pigeon</span>
               <span class="right ui" data-en="Done" data-zh="完成">Done</span>
             </div>
             <div class="action">
@@ -986,8 +986,8 @@
     <div class="step">
       <div class="step-copy">
         <div class="step-index">STEP 7</div>
-        <h3>运行已有的 Send to OTPigeon</h3>
-        <p>iOS 18 在触发条件之后会让你选：新建空白自动化，或使用已有 Shortcut。选 <span class="mono">Send to OTPigeon</span>。</p>
+        <h3>运行已有的 Send to Pigeon</h3>
+        <p>iOS 18 在触发条件之后会让你选：新建空白自动化，或使用已有 Shortcut。选 <span class="mono">Send to Pigeon</span>。</p>
         <div class="warn">
           <strong>不要选 New Blank Automation</strong>
           把 Text / URL / Get Contents of URL 直接写进自动化也能跑通，但那份自动化没法作为主要分享物。分享给别人时，应让他们导入普通 Shortcut，再自己选一次「运行该 Shortcut」。
@@ -1012,7 +1012,7 @@
               <div class="icons">
                 <span class="ic ic-run"><svg viewBox="0 0 16 16" fill="none"><path d="M5 3.5v9l8-4.5-8-4.5z" fill="#fff"/></svg></span>
               </div>
-              <div class="title-2">Send to OTPigeon</div>
+              <div class="title-2">Send to Pigeon</div>
             </div>
           </div>
           <div class="home-bar"></div>
@@ -1028,7 +1028,7 @@
         <p>完成后点进这条自动化，应看到：</p>
         <ul class="checklist">
           <li><strong class="ui" data-en="When" data-zh="当">When</strong>：<span class="ui" data-en="When I Get a Message Containing '验证码'" data-zh="当我收到包含“验证码”的信息时">When I Get a Message Containing '验证码'</span></li>
-          <li><strong class="ui" data-en="Do" data-zh="执行">Do</strong>：运行 <span class="mono">Send to OTPigeon</span></li>
+          <li><strong class="ui" data-en="Do" data-zh="执行">Do</strong>：运行 <span class="mono">Send to Pigeon</span></li>
           <li>顶部运行方式是 <span class="ui" data-en="Run Immediately" data-zh="立即运行">Run Immediately</span></li>
         </ul>
         <p>点进 Do，确认传入的是短信本身，也就是 <span class="ui" data-en="Shortcut Input" data-zh="快捷指令输入">Shortcut Input</span>。不要改成剪贴板或空输入。</p>
@@ -1061,7 +1061,7 @@
             <div class="card hit">
               <span class="hit-badge">8</span>
               <div class="icons"><span class="ic ic-run"><svg viewBox="0 0 16 16" fill="none"><path d="M5 3.5v9l8-4.5-8-4.5z" fill="#fff"/></svg></span></div>
-              <div class="title-2">Send to OTPigeon</div>
+              <div class="title-2">Send to Pigeon</div>
             </div>
           </div>
           <div class="home-bar"></div>
@@ -1087,12 +1087,12 @@
         <div class="phone"><div class="screen">
           <div class="island"></div>
           <div class="ios-body sheet" style="filter:blur(2px);opacity:.45">
-            <div class="large-title">Send to OTPigeon</div>
+            <div class="large-title">Send to Pigeon</div>
             <div class="card" style="height:120px"></div>
           </div>
           <div class="alert hit">
             <span class="hit-badge">9</span>
-            <h4>Send to OTPigeon</h4>
+            <h4>Send to Pigeon</h4>
             <p class="ui" data-en="This shortcut wants to access your PC on the local network." data-zh="此快捷指令想访问局域网上的电脑。">This shortcut wants to access your PC on the local network.</p>
             <div class="alert-btns">
               <span class="ui" data-en="Don't Allow" data-zh="不允许">Don't Allow</span>
@@ -1135,7 +1135,7 @@
                 <span class="ic ic-run"><svg viewBox="0 0 16 16" fill="none"><path d="M5 3.5v9l8-4.5-8-4.5z" fill="#fff"/></svg></span>
               </div>
               <div class="title-2 ui" data-en="When I Get a Message Containing '验证码'" data-zh="当我收到包含“验证码”的信息时">When I Get a Message Containing '验证码'</div>
-              <div class="sub">Send to OTPigeon</div>
+              <div class="sub">Send to Pigeon</div>
             </div>
           </div>
           <nav class="tabbar">
@@ -1157,14 +1157,14 @@
       <tbody>
         <tr>
           <td>窗口当前显示的数字地址，例如 <span class="mono">192.168.5.101</span></td>
-          <td>复制窗口里的新地址，打开 <span class="mono">Send to OTPigeon</span>，只改 URL 动作中的 IP。自动化不用重建。</td>
+          <td>复制窗口里的新地址，打开 <span class="mono">Send to Pigeon</span>，只改 URL 动作中的 IP。自动化不用重建。</td>
         </tr>
       </tbody>
     </table>
     </div>
     <div class="note">
       <strong>改地址只改普通 Shortcut</strong>
-      这就是拆成两块的好处：个人自动化仍然监听「验证码」，只有 URL 那一处要更新。OTPigeon 不再使用 .local 名称。
+      这就是拆成两块的好处：个人自动化仍然监听「验证码」，只有 URL 那一处要更新。Pigeon 不再使用 .local 名称。
     </div>
 
     <h2 id="names">中英文界面对照</h2>
@@ -1212,7 +1212,7 @@
 
     <footer class="foot">
       <p>插图按 iOS 18.4.1 英文 Shortcuts 还原，其中 Automation 列表、When/Do、Message 条件、动作编辑器对照了真机截图。触发器列表、选择已有 Shortcut、POST 展开页和权限弹窗未包含在原始四张截图中，按同版本界面惯例简化绘制。Windows 程序界面不在本页范围内。</p>
-      <p>OTPigeon 只消除「拿手机看验证码」这一步。它不会替你点「发送验证码」，也不会替你提交表单。</p>
+      <p>Pigeon 只消除「拿手机看验证码」这一步。它不会替你点「发送验证码」，也不会替你提交表单。</p>
     </footer>
   </div>
 

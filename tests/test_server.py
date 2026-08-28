@@ -46,7 +46,7 @@ def post_json(server: BridgeServer, path: str, payload: object):
 
 def test_health(running_server) -> None:
     server, _ = running_server
-    assert request(server, "GET", "/health") == (200, "OTPigeon OK")
+    assert request(server, "GET", "/health") == (200, "Pigeon OK")
 
 
 def test_only_loopback_and_rfc1918_clients_are_allowed() -> None:

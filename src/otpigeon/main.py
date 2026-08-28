@@ -128,7 +128,7 @@ class AppController:
 
 def main() -> int:
     if os.name != "nt":
-        raise SystemExit("OTPigeon V0.2 supports Windows only.")
+        raise SystemExit("Pigeon V0.2 supports Windows only.")
 
     from tkinter import messagebox
 
@@ -138,11 +138,11 @@ def main() -> int:
         controller = AppController()
         controller.start()
     except ConfigError as exc:
-        messagebox.showerror("OTPigeon configuration error", str(exc))
+        messagebox.showerror("Pigeon configuration error", str(exc))
         return 2
     except OSError as exc:
         messagebox.showerror(
-            "OTPigeon could not start",
+            "Pigeon could not start",
             f"The local server could not start. Port 8765 may already be in use.\n\n{exc}",
         )
         return 3

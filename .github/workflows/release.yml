@@ -24,26 +24,26 @@ jobs:
       - run: python -m pip install --no-build-isolation --no-deps -e .
       - run: python -m pytest
       - run: python scripts/check_docs.py
-      - run: pyinstaller --noconfirm --clean otpigeon.spec
+      - run: pyinstaller --noconfirm --clean pigeon.spec
       - shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force release/OTPigeon | Out-Null
-          Copy-Item dist/OTPigeon.exe, LICENSE, README.md, QUICKSTART.md, RELEASE_NOTES.md, SECURITY.md, THIRD_PARTY_NOTICES.md release/OTPigeon/
-          Copy-Item guide release/OTPigeon/guide -Recurse
-          New-Item -ItemType Directory -Force release/OTPigeon/docs | Out-Null
-          Copy-Item docs/architecture.md, docs/development-history.md, docs/development.md, docs/privacy-and-security.md, docs/troubleshooting.md release/OTPigeon/docs/
-          Copy-Item shortcuts release/OTPigeon/shortcuts -Recurse
-          Copy-Item licenses release/OTPigeon/licenses -Recurse
-          Compress-Archive -Path release/OTPigeon -DestinationPath release/OTPigeon-windows-x64.zip
-          $hash = (Get-FileHash -Algorithm SHA256 release/OTPigeon-windows-x64.zip).Hash.ToLowerInvariant()
-          "$hash  OTPigeon-windows-x64.zip" | Set-Content -Encoding ascii release/OTPigeon-windows-x64.zip.sha256
+          New-Item -ItemType Directory -Force release/Pigeon | Out-Null
+          Copy-Item dist/Pigeon.exe, LICENSE, README.md, QUICKSTART.md, RELEASE_NOTES.md, SECURITY.md, THIRD_PARTY_NOTICES.md release/Pigeon/
+          Copy-Item guide release/Pigeon/guide -Recurse
+          New-Item -ItemType Directory -Force release/Pigeon/docs | Out-Null
+          Copy-Item docs/architecture.md, docs/development-history.md, docs/development.md, docs/privacy-and-security.md, docs/troubleshooting.md release/Pigeon/docs/
+          Copy-Item shortcuts release/Pigeon/shortcuts -Recurse
+          Copy-Item licenses release/Pigeon/licenses -Recurse
+          Compress-Archive -Path release/Pigeon -DestinationPath release/Pigeon-windows-x64.zip
+          $hash = (Get-FileHash -Algorithm SHA256 release/Pigeon-windows-x64.zip).Hash.ToLowerInvariant()
+          "$hash  Pigeon-windows-x64.zip" | Set-Content -Encoding ascii release/Pigeon-windows-x64.zip.sha256
           Copy-Item RELEASE_NOTES.md release/RELEASE_NOTES.md
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: OTPigeon-windows-x64
+          name: Pigeon-windows-x64
           path: |
-            release/OTPigeon-windows-x64.zip
-            release/OTPigeon-windows-x64.zip.sha256
+            release/Pigeon-windows-x64.zip
+            release/Pigeon-windows-x64.zip.sha256
             release/RELEASE_NOTES.md
           if-no-files-found: error
 
@@ -57,13 +57,13 @@ jobs:
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: OTPigeon-windows-x64
+          name: Pigeon-windows-x64
           path: release-assets
       - name: Verify release archive
         shell: pwsh
         run: |
-          $expected = (Get-Content release-assets/OTPigeon-windows-x64.zip.sha256).Split()[0]
-          $actual = (Get-FileHash -Algorithm SHA256 release-assets/OTPigeon-windows-x64.zip).Hash.ToLowerInvariant()
+          $expected = (Get-Content release-assets/Pigeon-windows-x64.zip.sha256).Split()[0]
+          $actual = (Get-FileHash -Algorithm SHA256 release-assets/Pigeon-windows-x64.zip).Hash.ToLowerInvariant()
           if ($actual -ne $expected) {
             throw "Release archive SHA-256 mismatch: expected $expected, got $actual"
           }
@@ -75,8 +75,8 @@ jobs:
         run: |
           $tag = $env:GITHUB_REF_NAME
           $assets = @(
-            "release-assets/OTPigeon-windows-x64.zip",
-            "release-assets/OTPigeon-windows-x64.zip.sha256"
+            "release-assets/Pigeon-windows-x64.zip",
+            "release-assets/Pigeon-windows-x64.zip.sha256"
           )
           $isDraft = gh release view $tag --json isDraft --jq '.isDraft' 2>$null
           if ($LASTEXITCODE -eq 0) {

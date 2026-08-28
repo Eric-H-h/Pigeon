@@ -3,7 +3,13 @@ import json
 
 import pytest
 
-from otpigeon.config import AppConfig, ConfigError, ConfigStore, SCHEMA_VERSION
+from otpigeon.config import (
+    AppConfig,
+    ConfigError,
+    ConfigStore,
+    SCHEMA_VERSION,
+    default_config_path,
+)
 from otpigeon.i18n import DEFAULT_LANGUAGE
 
 
@@ -64,6 +70,32 @@ def test_legacy_config_defaults_to_chinese(tmp_path) -> None:
     )
 
     assert ConfigStore(path).load_or_create().language == DEFAULT_LANGUAGE
+
+
+def test_default_store_migrates_old_product_directory(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
+    old_path = tmp_path / "OTPigeon" / "config.json"
+    old_path.parent.mkdir()
+    old_path.write_text(
+        json.dumps(
+            {
+                "schema_version": SCHEMA_VERSION,
+                "install_id": "a" * 32,
+                "token": "x" * 20,
+                "port": 8765,
+                "language": DEFAULT_LANGUAGE,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    migrated = ConfigStore().load_or_create()
+
+    assert migrated.install_id == "a" * 32
+    assert migrated.token == "x" * 20
+    assert default_config_path() == tmp_path / "Pigeon" / "config.json"
+    assert default_config_path().exists()
+    assert old_path.exists()
 
 
 def test_invalid_json_fails_with_actionable_error(tmp_path) -> None:
