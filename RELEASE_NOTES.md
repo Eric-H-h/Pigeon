@@ -1,6 +1,6 @@
 # Pigeon V0.2.0 Alpha 8
 
-这是只供项目所有者真机验证的本地构建，当前分支尚未推送 GitHub，也未合并到 `main`。
+这是 Pigeon V0.2.0 Alpha 8 的预发布构建，已完成本地测试、iPhone 真机验证与 GitHub Actions 构建。
 
 ## 本版变化
 
