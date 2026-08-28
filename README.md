@@ -1,45 +1,119 @@
-# OTPigeon
+# Pigeon
 
-把 iPhone 收到的短信验证码，安全地送到同一局域网内的 Windows 剪贴板。
+> 投递简历时，不再为了一个验证码反复拿起手机。
 
-OTPigeon 是一个本地优先的小工具：iPhone「快捷指令」把短信正文发给 Windows，Windows 只提取 4–8 位验证码并写入剪贴板。运行时不需要云服务器，也不会把短信或验证码写入日志。
+## 为什么需要 Pigeon
 
-> 当前状态：**V0.2.0 Alpha 8 验证版**。窗口直接给出 Shortcut 要填写的完整 `/otp` URL，支持可持久化的中文/English 界面，并按语言显示“信鸽”或 `Pigeon`。此分支尚未推送或合并，等待真机验证。
+对于应届生来说，投递简历往往不是填完一张表就结束。不同公司的招聘网站、第三方招聘平台和测评系统经常要求短信验证；每遇到一次验证码，都要停下电脑上的填写操作，拿起手机、打开短信、记住数字，再回到电脑输入。
 
-## 它解决什么问题
+真正令人苦恼的并不是输入几位数字，而是这个动作会在一天内反复出现，不断打断填写简历、修改信息和提交申请的节奏。投递岗位越多，这种机械切换就越明显。
 
-旧版把固定 IP 写在快捷指令中，网络改变后很难判断应该填哪个地址。OTPigeon 现在会自动检测当前私有网络接口，并在窗口中直接显示真实地址，例如：
+Pigeon 用来省掉这一步：iPhone 收到验证码短信后，Pigeon 自动提取其中的 OTP，并把它放进 Windows 剪贴板。你留在电脑前，直接按 `Ctrl + V` 即可。
+
+## 它有什么效果
 
 ```text
-http://192.168.5.101:8765
+原来：网站发送验证码 → 拿起手机 → 打开短信 → 记住验证码 → 回到电脑输入
+现在：网站发送验证码 → iPhone 自动转发 → Pigeon 写入剪贴板 → Ctrl + V
 ```
 
-软件不再依赖 `.local` 名称解析，因此不会受到代理 Fake-IP 或路由器 mDNS 支持情况影响。数字 IP 仍可能在切换路由器、重开热点或重新分配地址后改变；窗口会自动刷新，用户只需修改普通 Shortcut 中的 URL，不必重建个人自动化。
+Pigeon 只负责把验证码送到剪贴板，不会替你点击“发送验证码”、自动填写其他个人信息或提交简历。最终操作仍由你确认。
 
-## 网络类别必须选择“专用网络”
+## 软件介绍
 
-OTPigeon 只应在你信任的局域网中使用。Windows 当前 Wi-Fi 或热点连接必须设置为 **专用网络（Private）**，Windows 防火墙中的 OTPigeon 也只勾选 **专用**，不要勾选 **公用（Public）**。
+Pigeon 是一个连接 iPhone 与 Windows 的本地工具：
 
-如果改成“公用网络”后才能连接，说明现有防火墙权限勾反了。正确做法不是长期使用公用网络，而是：
+- iPhone 通过 Shortcut 把收到的短信正文发送到同一局域网内的电脑；
+- Pigeon 从短信中提取唯一的 4–8 位 OTP；
+- 提取结果写入 Windows 剪贴板，短信正文和完整 OTP 不会写入日志；
+- 整个过程不依赖第三方云服务器。
 
-1. 把 Windows 网络类别改回“专用网络”；
-2. 打开“Windows 安全中心 → 防火墙和网络保护 → 允许应用通过防火墙”；
-3. 找到 OTPigeon，勾选“专用”，取消“公用”；
-4. 重启 OTPigeon，再从 iPhone 测试 `/health`。
+窗口会直接显示 Shortcut 需要填写的完整 URL、配对 `token` 和当前可用的 IP 地址。切换路由器或 IP 变化后，可以从窗口复制新的 URL。
 
-## 推荐使用方式
+## 下载
 
-1. 让 Windows 和 iPhone 连接同一台受信任路由器；也可以让 iPhone 连接 Windows 移动热点。
-2. 确认 Windows 网络类别是“专用网络”。
-3. 启动 OTPigeon；防火墙询问时只允许“专用网络”。
-4. 从窗口复制“快捷指令 URL”与“配对 token”，填入 iPhone Shortcut；URL 已包含 `/otp`，不需要手动拼接。
-5. 把 URL 末尾的 `/otp` 临时替换成 `/health` 并在 Safari 打开；看到 `OTPigeon OK` 后再测试真实验证码。
+当前版本：**V0.2.0 Alpha 8**，支持 Windows 10/11。
 
-如果在校园环境使用自己的路由器，只要 Windows 和 iPhone 都连接这台路由器的普通 LAN、没有进入访客网络或启用设备隔离，两台设备之间的请求会留在自己的局域网内。不要让两台设备直接连接不受信任的校园公共 Wi-Fi。
+- [直接下载 Windows ZIP](https://github.com/Eric-H-h/OTPigeon/releases/download/v0.2.0-alpha.8/OTPigeon-windows-x64.zip)
+- [查看 SHA-256 校验值](https://github.com/Eric-H-h/OTPigeon/releases/download/v0.2.0-alpha.8/OTPigeon-windows-x64.zip.sha256)
+- [查看全部 Releases](https://github.com/Eric-H-h/OTPigeon/releases)
 
-下载发行包时先阅读 [QUICKSTART.md](QUICKSTART.md)。Alpha EXE 尚未代码签名，SmartScreen 可能提示风险；请先核对 GitHub Release 附带的 SHA-256，不要关闭 SmartScreen。
+下载后请解压整个 ZIP，再运行其中的 `OTPigeon.exe`。当前 Alpha 版本尚未进行代码签名，Windows SmartScreen 可能显示风险提示；请确认文件来自本仓库，并核对 Release 中的 SHA-256。
 
-## 从源码运行
+## 快速使用
+
+1. 让 iPhone 和 Windows 连接同一台你信任的路由器。
+2. 在 Windows 中把当前网络设置为**专用网络**；首次运行时，防火墙也只允许 Pigeon 访问**专用网络**。
+3. 解压下载的 ZIP，运行 `OTPigeon.exe`。
+4. 从窗口复制“快捷指令 URL”和“配对 token”，填入 iPhone Shortcut。
+5. 收到验证码短信后，等待窗口显示“OTP 已复制”，然后在电脑上按 `Ctrl + V`。
+
+连接测试：将窗口 URL 末尾的 `/otp` 临时改成 `/health`，再用 iPhone Safari 打开。看到 `OTPigeon OK`，说明手机到电脑的局域网链路正常。
+
+如果你在校园网环境中使用自己的路由器，两台设备都应连接这台路由器的普通 LAN，不要使用访客网络，也不要开启设备隔离。
+
+## Shortcuts 配置教程
+
+[Shortcuts 配置教程（链接待补充）](#)
+
+这里暂不展开具体配置。之后可以把上面的占位链接替换为可直接导入的 Shortcut 或独立教程。
+
+## 进一步了解
+
+以下内容用于排障、了解安全边界或参与开发。只想使用 Pigeon 的用户，完成上面的下载和快速使用即可。
+
+### IP 地址改变后怎么办
+
+Pigeon 每 5 秒检测一次当前私有 IPv4 地址，并自动更新窗口中的完整 `/otp` URL。地址变化后，只需在普通 Shortcut 中替换这一处 URL，个人自动化不需要重建。
+
+如果经常使用同一台路由器，也可以在路由器管理页面为 Windows 设置 DHCP 地址保留；具体入口取决于路由器型号。
+
+### 为什么必须使用专用网络
+
+Pigeon 通过局域网 HTTP 接收短信正文，因此只应在你信任的网络中运行：
+
+1. Windows 当前 Wi-Fi 或以太网应设置为**专用网络（Private）**；
+2. Windows 防火墙中的 Pigeon 只允许**专用网络**，不要允许**公用网络（Public）**；
+3. 不要在路由器上把 TCP 8765 转发到公网。
+
+如果只有切换成“公用网络”后才能连接，通常说明防火墙权限勾反了。请把网络改回专用，并修正应用的防火墙授权。
+
+### 工作方式
+
+```text
+iPhone 短信个人自动化
+        │ 短信正文 + 配对 token（HTTP POST，仅局域网）
+        ▼
+Pigeon：验证 token → 提取唯一的 4–8 位 OTP
+        │
+        ▼
+Windows 剪贴板（请求排除历史记录与云同步）
+```
+
+服务提供三个端点：
+
+- `GET /health`：检查手机到电脑的网络连接；
+- `POST /check`：验证配对 `token`，不操作剪贴板；
+- `POST /otp`：验证 `token`、提取 OTP 并复制。
+
+### 安全与隐私
+
+- 短信正文只在 iPhone 与 Windows 的当前局域网之间传输；
+- 每次安装生成独立的随机配对 `token`；
+- 程序不记录短信正文、`token` 或完整 OTP，界面只显示脱敏事件；
+- 服务只接受本机回环或 RFC1918 私网来源；
+- 局域网 HTTP **不是端到端加密**，因此不能在公共 Wi-Fi 或公网端口转发环境中使用。
+
+完整边界见[隐私与安全说明](docs/privacy-and-security.md)和[安全策略](SECURITY.md)。
+
+### 当前限制
+
+- IP 改变后，需要更新普通 Shortcut 中的一处 URL；
+- iOS 个人自动化不能随普通 Shortcut 一起分享，接收者仍需自己创建 Message 自动化；
+- 当前识别包含关键词的 4–8 位数字及常见 `123-456` 格式；遇到多个无法判断的数字时会拒绝猜测；
+- 当前不会自动点击网页、填写其他字段或提交表单。
+
+### 从源码运行
 
 要求：Windows 10/11、Python 3.10–3.12。
 
@@ -49,73 +123,18 @@ py -3.12 -m venv .venv
 .venv\Scripts\python run_otpigeon.py
 ```
 
-首次启动时会在 `%LOCALAPPDATA%\OTPigeon\config.json` 创建随机安装 ID、随机配对 token 和界面语言设置。不要把这个文件上传、截图公开或发给他人。
+首次启动会在 `%LOCALAPPDATA%\OTPigeon\config.json` 创建随机安装 ID、配对 `token` 和界面语言设置。不要公开或提交这个配置文件。
 
-## 工作方式
-
-```text
-iPhone 短信个人自动化
-        │ 短信正文 + 配对令牌（HTTP POST，仅局域网）
-        ▼
-Windows 当前私有 IPv4 地址:8765
-        │ 验证令牌 → 提取唯一的 4–8 位数字
-        ▼
-Windows 剪贴板（请求排除历史记录与云同步）
-```
-
-服务只提供三个端点：
-
-- `GET /health`：网络连通性检查，不需要令牌。
-- `POST /check`：验证配对令牌，不接触剪贴板。
-- `POST /otp`：验证令牌、提取验证码并复制。
-
-## IP 地址改变后怎么办
-
-OTPigeon 每 5 秒重新检测一次私有 IPv4 地址，窗口会自动显示新地址。地址变化后：
-
-1. 从窗口复制新的“快捷指令 URL”；
-2. 打开 iPhone 上的普通 `Send to OTPigeon` Shortcut；
-3. 用新值完整替换 URL 动作中的旧值；
-4. 把末尾 `/otp` 临时改成 `/health`，先用 Safari 测试连通性。
-
-个人自动化不用删除或重建。经常在同一路由器使用时，也可以在路由器管理页面为 Windows 设置 DHCP 地址保留；具体入口由路由器型号决定。
-
-## 界面语言
-
-窗口右上角的 `Language` 可选择“中文”或 `English`，选择结果会保存到本机配置。中文界面仍保留 `token`、`IP`、`URL`、`OTP`、`Shortcut` 等专有词的英文写法，便于和 iPhone 及排障文档逐项对应。
-
-## 安全与隐私
-
-- 不依赖第三方服务器，短信正文只在 iPhone 与 Windows 的当前局域网之间传输。
-- 每次安装使用独立随机令牌；服务端使用常量时间比较。
-- 不记录请求正文、令牌或完整验证码；界面只显示脱敏事件。
-- 请求体和短信长度有限制，异常输入会被拒绝。
-- 服务只接受本机回环或 RFC1918 私网来源。
-- 写入验证码时请求 Windows 排除剪贴板历史与云剪贴板；最终行为仍受 Windows 版本和策略影响。
-- 局域网 HTTP **不是端到端加密**。只在受信任的专用网络中使用，不要做公网端口转发。
-
-完整边界见[隐私与安全说明](docs/privacy-and-security.md)和[安全策略](SECURITY.md)。
-
-## 当前限制
-
-- 数字 IP 改变后，需要更新普通 Shortcut 中的一处 URL。
-- 如果窗口列出多个地址，应选择与 iPhone 同一网段的地址；例如 iPhone 是 `192.168.5.x`，就选择同样以 `192.168.5.` 开头的 Windows 地址。
-- iOS 个人自动化不能随普通 Shortcut 一起分享，接收者仍需自己创建一次 Message 自动化。
-- 验证码识别面向包含关键词的 4–8 位数字及常见 `123-456` 格式；多个无关键词数字会拒绝猜测。
-- V0.2 基线为 iOS 18.4.1 英文界面；其他 iOS 18 小版本的按钮文字可能略有不同。
-- 当前不自动点击网页、不自动提交表单，也不会读取 Windows 上的短信。
-
-## 文档
+### 开发与文档
 
 - [快速开始](QUICKSTART.md)
-- [Alpha 发布说明](RELEASE_NOTES.md)
-- [iPhone 快捷指令图文指南](guide/iphone-shortcuts.html)
+- [Alpha 8 发布说明](RELEASE_NOTES.md)
 - [故障排查](docs/troubleshooting.md)
 - [架构与设计取舍](docs/architecture.md)
 - [开发历史与旧版迁移](docs/development-history.md)
 - [从源码开发与测试](docs/development.md)
 
-## 开发
+运行测试与构建：
 
 ```powershell
 .venv\Scripts\python -m pip install -r requirements-build.lock
@@ -124,16 +143,14 @@ OTPigeon 每 5 秒重新检测一次私有 IPv4 地址，窗口会自动显示�
 .venv\Scripts\pyinstaller otpigeon.spec
 ```
 
-详见[开发说明](docs/development.md)。
+### 卸载
 
-## 卸载
-
-1. 在 OTPigeon 窗口选择 `Exit`。
-2. 删除解压出的 OTPigeon 文件夹或 `OTPigeon.exe`。
-3. 删除 `%LOCALAPPDATA%\OTPigeon`，清除安装 ID 与配对 token。
-4. 在 iPhone 删除 `Send to OTPigeon` Shortcut 和对应的 Message Personal Automation。
-5. 如 Windows 防火墙中仍有 OTPigeon 允许项，可在“允许应用通过防火墙”中移除。
+1. 在 Pigeon 窗口选择“退出”。
+2. 删除解压后的文件夹或 `OTPigeon.exe`。
+3. 删除 `%LOCALAPPDATA%\OTPigeon`，清除安装 ID 与配对 `token`。
+4. 在 iPhone 删除相关 Shortcut 和 Message Personal Automation。
+5. 如 Windows 防火墙仍有 Pigeon 允许项，可在“允许应用通过防火墙”中移除。
 
 ## License
 
-OTPigeon 自身代码使用 [MIT License](LICENSE)。二进制发行包还应同时附带 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 中列出的第三方许可信息。
+Pigeon 使用 [MIT License](LICENSE)。二进制发行包同时包含 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 中列出的第三方许可信息。

@@ -2,7 +2,7 @@ from otpigeon.i18n import text, translate_event, translate_status
 
 
 def test_chinese_ui_keeps_technical_terms_in_english() -> None:
-    assert text("zh-CN", "app_name") == "信鸽"
+    assert text("zh-CN", "app_name") == "Pigeon"
     assert text("zh-CN", "shortcut_url") == "快捷指令 URL"
     assert text("zh-CN", "pairing_token") == "配对 token"
     assert text("zh-CN", "available_ips") == "可用 IP 地址"

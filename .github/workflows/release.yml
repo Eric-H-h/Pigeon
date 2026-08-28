@@ -85,5 +85,5 @@ jobs:
             }
             gh release upload $tag $assets --clobber
           } else {
-            gh release create $tag $assets --draft --title "OTPigeon $tag" --notes-file release-assets/RELEASE_NOTES.md
+            gh release create $tag $assets --draft --title "Pigeon $tag" --notes-file release-assets/RELEASE_NOTES.md
           }
