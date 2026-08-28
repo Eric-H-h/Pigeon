@@ -4,7 +4,7 @@
 
 ## 1. Windows 是否在运行
 
-OTPigeon 窗口应显示 `Running`，并在 `PC address (current IP)` 中显示类似 `http://192.168.5.101:8765` 的数字地址。若提示端口被占用，关闭另一个 OTPigeon 实例或占用 8765 的程序后重启。
+OTPigeon 中文界面应显示“运行中”，并在“快捷指令 URL”中显示类似 `http://192.168.5.101:8765/otp` 的完整地址。若提示端口被占用，关闭另一个 OTPigeon 实例或占用 8765 的程序后重启。
 
 ## 2. Windows 是否使用专用网络
 
@@ -34,7 +34,7 @@ Router:  192.168.5.1
 
 ## 4. 先测数字地址
 
-在 iPhone Safari 打开窗口显示地址的 `/health`：
+复制窗口中的“快捷指令 URL”，把末尾 `/otp` 替换成 `/health`，再在 iPhone Safari 打开：
 
 ```text
 http://192.168.5.101:8765/health
@@ -61,6 +61,6 @@ http://192.168.5.101:8765/health
 
 ## 7. IP 改变了怎么办
 
-OTPigeon 每 5 秒检测一次当前私有 IPv4 地址，窗口会自动刷新。复制新地址，打开普通 `Send to OTPigeon` Shortcut，只替换 URL 中的 IP，保留 `/otp`。个人自动化不需要重建。
+OTPigeon 每 5 秒检测一次当前私有 IPv4 地址，窗口会自动生成新的完整 `/otp` URL。复制新 URL，打开普通 `Send to OTPigeon` Shortcut，用它完整替换旧 URL。个人自动化不需要重建。
 
 如果经常连接同一台路由器，可以在路由器中为 Windows 配置 DHCP 地址保留，减少地址变化。该设置只应在自己的受信任路由器上完成。

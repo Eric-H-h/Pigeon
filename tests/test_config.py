@@ -4,6 +4,7 @@ import json
 import pytest
 
 from otpigeon.config import AppConfig, ConfigError, ConfigStore, SCHEMA_VERSION
+from otpigeon.i18n import DEFAULT_LANGUAGE
 
 
 def test_load_or_create_persists_configuration(tmp_path) -> None:
@@ -16,6 +17,7 @@ def test_load_or_create_persists_configuration(tmp_path) -> None:
     assert first.schema_version == SCHEMA_VERSION
     assert first.install_id
     assert first.port == 8765
+    assert first.language == DEFAULT_LANGUAGE
 
 
 def test_regenerate_token_preserves_device_identity(tmp_path) -> None:
@@ -26,6 +28,7 @@ def test_regenerate_token_preserves_device_identity(tmp_path) -> None:
 
     assert after.install_id == before.install_id
     assert after.port == before.port
+    assert after.language == before.language
     assert after.token != before.token
     assert store.load_or_create() == after
 
@@ -36,6 +39,31 @@ def test_save_rejects_invalid_port(tmp_path) -> None:
 
     with pytest.raises(ConfigError):
         store.save(replace(config, port=70000))
+
+
+def test_save_rejects_invalid_language(tmp_path) -> None:
+    store = ConfigStore(tmp_path / "config.json")
+    config = store.load_or_create()
+
+    with pytest.raises(ConfigError):
+        store.save(replace(config, language="invalid"))
+
+
+def test_legacy_config_defaults_to_chinese(tmp_path) -> None:
+    path = tmp_path / "config.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": SCHEMA_VERSION,
+                "install_id": "a" * 32,
+                "token": "x" * 20,
+                "port": 8765,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert ConfigStore(path).load_or_create().language == DEFAULT_LANGUAGE
 
 
 def test_invalid_json_fails_with_actionable_error(tmp_path) -> None:

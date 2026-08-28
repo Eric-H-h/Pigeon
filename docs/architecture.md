@@ -17,21 +17,21 @@ Message Personal Automation
 
 | 模块 | 责任 |
 | --- | --- |
-| `config.py` | 创建、校验和原子保存安装配置 |
+| `config.py` | 创建、校验和原子保存安装配置与 Language 选择 |
 | `network.py` | 枚举并监视当前 RFC1918 私有 IPv4 地址 |
 | `server.py` | HTTP 协议、鉴权、输入限制和状态码 |
 | `otp.py` | 纯函数验证码提取，不接触网络与剪贴板 |
 | `clipboard.py` | Windows 敏感剪贴板写入 |
-| `main.py` | 生命周期、当前数字 URL 与供 GUI 使用的窄接口 |
+| `main.py` | 生命周期、完整 `/otp` URL 与供 GUI 使用的窄接口 |
 | `ui.py` | 状态展示和用户操作，不包含协议逻辑 |
 
 ## 为什么直接使用数字 IP
 
-V0.2.0 Alpha 6 不再发布或解析 `.local` 名称。原因不是数字 IP 永远不变，而是数字 IP 更容易观察和验证：Windows 窗口显示的地址就是 iPhone 实际请求的目标，不再经过 mDNS、系统 DNS 或代理 Fake-IP。
+V0.2.0 Alpha 7 不发布或解析 `.local` 名称。原因不是数字 IP 永远不变，而是数字 IP 更容易观察和验证：Windows 窗口显示的地址就是 iPhone 实际请求的目标，不再经过 mDNS、系统 DNS 或代理 Fake-IP。
 
 网络监视器每 5 秒重新枚举地址。只接受 RFC1918 范围：`10.0.0.0/8`、`172.16.0.0/12`、`192.168.0.0/16`；回环、APIPA、测试网段和公网地址不会出现在连接列表中。
 
-如果存在多个私有接口，GUI 会全部列出。用户应选择与 iPhone 同一网段的地址。IP 改变后，GUI 自动刷新，但 Shortcut 中的 URL 需要手动更新一次。
+如果存在多个私有接口，GUI 会在下方全部列出；上方直接生成可粘贴到 Shortcut 的完整 `/otp` URL。用户应选择与 iPhone 同一网段的地址。IP 改变后，GUI 自动刷新，但 Shortcut 中的 URL 需要手动更新一次。
 
 ## 网络与防火墙边界
 

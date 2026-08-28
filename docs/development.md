@@ -13,7 +13,7 @@ py -3.12 -m venv .venv
 .venv\Scripts\python -m pytest
 ```
 
-运行时依赖只有 `ifaddr`，用于枚举本机网络接口。V0.2.0 Alpha 6 已移除 `python-zeroconf` 和 mDNS 发布逻辑。
+运行时依赖只有 `ifaddr`，用于枚举本机网络接口。V0.2.0 Alpha 7 不使用 `python-zeroconf` 或 mDNS 发布逻辑。
 
 ## 本地运行
 
@@ -50,10 +50,11 @@ curl.exe --noproxy "*" http://当前数字IP:8765/health
 1. `pytest` 全部通过，文档链接检查通过。
 2. 在干净 Windows 环境启动 EXE，确认没有 Python 依赖。
 3. Windows 网络类别为“专用”，OTPigeon 防火墙只勾选“专用”。
-4. 窗口显示当前真实私有 IPv4 地址，不出现 `.local` 地址。
-5. iPhone 使用该数字地址通过 `/health` 和 `/check`。
-6. 地址改变后窗口自动刷新；更新普通 Shortcut 的 URL 后恢复连接。
-7. 真实短信能复制 OTP，失败事件不泄露正文、token 或完整验证码。
-8. 检查发行包第三方许可和 SHA-256。
+4. 窗口上方显示以 `/otp` 结尾的完整 Shortcut URL，下方显示当前真实私有 IPv4 地址，不出现 `.local` 地址。
+5. `Language` 可在中文和 English 间切换，重启后保持选择；中文界面保留 `token`、`IP`、`URL`、`OTP` 等术语。
+6. iPhone 使用该数字地址通过 `/health` 和 `/check`。
+7. 地址改变后窗口自动刷新；更新普通 Shortcut 的 URL 后恢复连接。
+8. 真实短信能复制 OTP，失败事件不泄露正文、token 或完整验证码。
+9. 检查发行包第三方许可和 SHA-256。
 
 没有完成第 4–7 项时，只能发布为 pre-release。

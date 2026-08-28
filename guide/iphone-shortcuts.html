@@ -665,7 +665,7 @@
       <li>iPhone 系统为 iOS 18.4.1 或同代 Shortcuts。本页按 18.4.1 英文界面。</li>
       <li>iPhone 已连上 Windows 热点，或同一台可信的家庭路由器。不要依赖酒店、校园、公司访客 Wi-Fi。</li>
       <li>Windows 上 OTPigeon / OTP Bridge 已经在运行。</li>
-      <li>准备两样从电脑复制的值：<strong>PC Address</strong> 和 <strong>Pairing Token</strong>。</li>
+      <li>准备两样从电脑复制的值：<strong>Shortcut URL</strong> 和 <strong>Pairing token</strong>。</li>
     </ul>
     <div class="chips">
       <span class="chip"><span class="mono">验证码</span><button type="button" data-copy="验证码">复制</button></span>
@@ -679,7 +679,7 @@
       <div class="step-copy">
         <div class="step-index">STEP 0</div>
         <h3>先用 Safari 确认手机能访问电脑</h3>
-        <p>还不要做 Shortcut。在 iPhone Safari 地址栏打开：</p>
+        <p>还不要做 Shortcut。复制 OTPigeon 窗口中的完整 URL，把末尾 <span class="mono">/otp</span> 临时替换为 <span class="mono">/health</span>，再在 iPhone Safari 打开：</p>
         <p class="mono">http://你的PC地址:8765/health</p>
         <p>页面出现 <span class="mono">OK</span> 字样就可以往下走。这一步能排除「根本没连上」：热点、防火墙、地址填错，都会在这里暴露。</p>
         <div class="warn">
@@ -745,10 +745,10 @@
         <p>点顶部名称，改成 <span class="mono">Send to OTPigeon</span>。底部搜索栏依次加入：</p>
         <ol class="checklist">
           <li><strong class="ui" data-en="Text" data-zh="文本">Text</strong>：内容选变量 <span class="ui" data-en="Shortcut Input" data-zh="快捷指令输入">Shortcut Input</span>。不要手打短信。</li>
-          <li><strong>URL</strong>：填电脑地址，并以 <span class="mono">/otp</span> 结尾。</li>
+          <li><strong>URL</strong>：直接粘贴 OTPigeon 窗口“快捷指令 URL”框中的完整内容；它已经以 <span class="mono">/otp</span> 结尾。</li>
           <li><strong class="ui" data-en="Get Contents of URL" data-zh="获取 URL 内容">Get Contents of URL</strong>：下一步再展开改 POST。</li>
         </ol>
-        <p>URL 的最终形态必须是下面这样，不要重复粘贴 <span class="mono">http://</span>，也不要漏掉 <span class="mono">/otp</span>：</p>
+        <p>URL 的最终形态必须是下面这样。不要再次添加 <span class="mono">http://</span> 或 <span class="mono">/otp</span>：</p>
         <p class="mono">http://PC_ADDRESS:8765/otp</p>
         <div class="note">
           <strong>为什么要先放一个 Text？</strong>

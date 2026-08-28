@@ -14,9 +14,10 @@ from .server import BridgeEvent, BridgeServer
 @dataclass(frozen=True, slots=True)
 class AppSnapshot:
     status: str
-    address: str
+    shortcut_url: str
     numeric_addresses: tuple[str, ...]
     token: str
+    language: str
     last_event: str
     network_error: str | None
 
@@ -65,14 +66,17 @@ class AppController:
             for candidate in network.addresses
         )
         if network.addresses:
-            address = f"http://{network.addresses[0].address}:{config.port}"
+            shortcut_url = (
+                f"http://{network.addresses[0].address}:{config.port}/otp"
+            )
         else:
-            address = "No private IPv4 address detected"
+            shortcut_url = ""
         return AppSnapshot(
             status=status,
-            address=address,
+            shortcut_url=shortcut_url,
             numeric_addresses=numeric_addresses,
             token=config.token,
+            language=config.language,
             last_event=last_event,
             network_error=network.error,
         )
@@ -91,6 +95,12 @@ class AppController:
             self._last_event = self._timestamp(
                 "Pairing token regenerated; update the iPhone Shortcut"
             )
+        return updated
+
+    def set_language(self, language: str) -> AppConfig:
+        updated = self._config_store.set_language(language)
+        with self._lock:
+            self._config = updated
         return updated
 
     def _on_bridge_event(self, event: BridgeEvent) -> None:

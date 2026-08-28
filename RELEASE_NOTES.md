@@ -1,30 +1,27 @@
-# OTPigeon V0.2.0 Alpha 6
+# OTPigeon V0.2.0 Alpha 7
 
-这是用于 iPhone 真机和第二用户测试的预发布版本，不是稳定版。
+这是只供项目所有者真机验证的本地构建，当前分支尚未推送 GitHub，也未合并到 `main`。
 
 ## 本版变化
 
-- 主窗口直接显示 Windows 当前的私有 IPv4 地址，例如 `http://192.168.5.101:8765`。
-- 每 5 秒重新检测网络地址，IP 变化后窗口自动刷新。
-- 移除 `.local`/mDNS 连接方式及 `python-zeroconf` 运行时依赖。
-- README、快速开始和图文指南统一要求 Windows 使用“专用网络”。
-- 明确说明：如果只有切换到“公用网络”才能连接，应修正防火墙权限，而不是长期使用公用网络。
+- 上方输入框改为“快捷指令 URL”，直接显示 `http://当前IP:8765/otp`；复制后可以原样粘贴进 Shortcut。
+- 下方“可用 IP 地址”继续列出每个私有网卡的基础地址，方便排查多网卡和 IP 变化。
+- 窗口右上角新增 `Language`，支持“中文”和 `English`。
+- 默认使用中文，并把 Language 选择保存到 `%LOCALAPPDATA%\OTPigeon\config.json`。
+- 中文界面保留 `token`、`IP`、`URL`、`OTP`、`Shortcut` 等专有词的英文写法。
+- 旧版配置没有 Language 字段时会自动按中文加载，不要求用户删除 token 或重建配置。
+
+## 延续 Alpha 6 的行为
+
+- 直接使用 Windows 当前私有 IPv4 地址，不使用 `.local` 或 mDNS。
+- 每 5 秒检测地址变化并刷新窗口。
+- Windows 当前连接和 OTPigeon 防火墙权限都应使用“专用网络”。
 - 保留随机配对 token、私网来源限制、OTP 提取和敏感剪贴板写入。
 
-## 已知限制
+## 真机验证重点
 
-- 数字 IP 改变后，需要更新普通 Shortcut 中的一处 URL；个人自动化不用重建。
-- 多网卡电脑可能显示多个私有地址，用户应选择与 iPhone 同一网段的地址。
-- 个人自动化不能随 Shortcut 分享，需要接收者手动创建。
-- EXE 尚未代码签名，可能触发 SmartScreen。
-- HTTP 没有端到端加密，只能在 Windows 移动热点或受信任的专用网络使用。
-
-## 发布检查
-
-本 Release 应保持 Draft，直到完成：
-
-- 无 Python 的干净 Windows 11 启动测试；
-- iPhone 使用数字地址通过 `/health`、`/check`、真实短信与锁屏测试；
-- Windows 网络类别和 OTPigeon 防火墙权限均为“专用”；
-- 第二名非开发者按文档完成安装；
-- `.shortcut` 从真机导出并确认不含维护者地址和 token。
+1. 中文界面首次启动正常，切换到 `English` 后所有标签和按钮立即更新。
+2. 重新启动后保持上次 Language 选择。
+3. “快捷指令 URL”包含 `/otp`，Copy 按钮复制的内容可以直接粘贴到 Shortcut。
+4. 把 URL 末尾 `/otp` 改成 `/health` 后，iPhone Safari 显示 `OTPigeon OK`。
+5. 真实短信自动化仍能把 OTP 写入 Windows 剪贴板。

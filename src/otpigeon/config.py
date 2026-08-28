@@ -8,6 +8,8 @@ import secrets
 import tempfile
 import uuid
 
+from .i18n import DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES
+
 
 SCHEMA_VERSION = 1
 DEFAULT_PORT = 8765
@@ -23,6 +25,8 @@ class AppConfig:
     install_id: str
     token: str
     port: int
+    language: str
+
 
 def default_config_path() -> Path:
     local_app_data = os.environ.get("LOCALAPPDATA")
@@ -57,6 +61,12 @@ class ConfigStore:
         self.save(updated)
         return updated
 
+    def set_language(self, language: str) -> AppConfig:
+        config = self.load_or_create()
+        updated = replace(config, language=language)
+        self.save(updated)
+        return updated
+
     def save(self, config: AppConfig) -> None:
         self._validate(asdict(config))
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -86,6 +96,7 @@ class ConfigStore:
             install_id=uuid.uuid4().hex,
             token=secrets.token_urlsafe(16),
             port=DEFAULT_PORT,
+            language=DEFAULT_LANGUAGE,
         )
 
     @staticmethod
@@ -97,6 +108,7 @@ class ConfigStore:
         install_id = data.get("install_id")
         token = data.get("token")
         port = data.get("port")
+        language = data.get("language", DEFAULT_LANGUAGE)
 
         if schema_version != SCHEMA_VERSION:
             raise ConfigError(f"Unsupported configuration schema: {schema_version!r}.")
@@ -110,10 +122,13 @@ class ConfigStore:
             raise ConfigError("Configuration token is invalid.")
         if isinstance(port, bool) or not isinstance(port, int) or not 1 <= port <= 65535:
             raise ConfigError("Configuration port is invalid.")
+        if language not in SUPPORTED_LANGUAGES:
+            raise ConfigError("Configuration language is invalid.")
 
         return AppConfig(
             schema_version=schema_version,
             install_id=install_id,
             token=token,
             port=port,
+            language=language,
         )

@@ -4,7 +4,7 @@
 
 OTPigeon 是一个本地优先的小工具：iPhone「快捷指令」把短信正文发给 Windows，Windows 只提取 4–8 位验证码并写入剪贴板。运行时不需要云服务器，也不会把短信或验证码写入日志。
 
-> 当前状态：**V0.2.0 Alpha 6**。本版改为直接显示和使用 Windows 当前的私有 IPv4 地址，不再使用 `.local` 名称或 mDNS。公开发布前仍需完成更多 iPhone 真机和第二用户验收。
+> 当前状态：**V0.2.0 Alpha 7 验证版**。窗口直接给出 Shortcut 要填写的完整 `/otp` URL，并新增可持久化的中文/English 界面。此分支尚未推送或合并，等待真机验证。
 
 ## 它解决什么问题
 
@@ -32,8 +32,8 @@ OTPigeon 只应在你信任的局域网中使用。Windows 当前 Wi-Fi 或热�
 1. 让 Windows 和 iPhone 连接同一台受信任路由器；也可以让 iPhone 连接 Windows 移动热点。
 2. 确认 Windows 网络类别是“专用网络”。
 3. 启动 OTPigeon；防火墙询问时只允许“专用网络”。
-4. 从窗口复制 `PC address (current IP)` 与 `Pairing token`，填入 iPhone Shortcut。
-5. 先在 Safari 打开 `<PC address>/health`；看到 `OTPigeon OK` 后再测试 `/check` 和真实验证码。
+4. 从窗口复制“快捷指令 URL”与“配对 token”，填入 iPhone Shortcut；URL 已包含 `/otp`，不需要手动拼接。
+5. 把 URL 末尾的 `/otp` 临时替换成 `/health` 并在 Safari 打开；看到 `OTPigeon OK` 后再测试真实验证码。
 
 如果在校园环境使用自己的路由器，只要 Windows 和 iPhone 都连接这台路由器的普通 LAN、没有进入访客网络或启用设备隔离，两台设备之间的请求会留在自己的局域网内。不要让两台设备直接连接不受信任的校园公共 Wi-Fi。
 
@@ -49,7 +49,7 @@ py -3.12 -m venv .venv
 .venv\Scripts\python run_otpigeon.py
 ```
 
-首次启动时会在 `%LOCALAPPDATA%\OTPigeon\config.json` 创建随机安装 ID 与随机配对令牌。不要把这个文件上传、截图公开或发给他人。
+首次启动时会在 `%LOCALAPPDATA%\OTPigeon\config.json` 创建随机安装 ID、随机配对 token 和界面语言设置。不要把这个文件上传、截图公开或发给他人。
 
 ## 工作方式
 
@@ -73,12 +73,16 @@ Windows 剪贴板（请求排除历史记录与云同步）
 
 OTPigeon 每 5 秒重新检测一次私有 IPv4 地址，窗口会自动显示新地址。地址变化后：
 
-1. 从窗口复制新的 `PC address (current IP)`；
+1. 从窗口复制新的“快捷指令 URL”；
 2. 打开 iPhone 上的普通 `Send to OTPigeon` Shortcut；
-3. 只替换 URL 动作中的主机地址，保留 `/otp`；
-4. 先用 Safari 测试新地址的 `/health`。
+3. 用新值完整替换 URL 动作中的旧值；
+4. 把末尾 `/otp` 临时改成 `/health`，先用 Safari 测试连通性。
 
 个人自动化不用删除或重建。经常在同一路由器使用时，也可以在路由器管理页面为 Windows 设置 DHCP 地址保留；具体入口由路由器型号决定。
+
+## 界面语言
+
+窗口右上角的 `Language` 可选择“中文”或 `English`，选择结果会保存到本机配置。中文界面仍保留 `token`、`IP`、`URL`、`OTP`、`Shortcut` 等专有词的英文写法，便于和 iPhone 及排障文档逐项对应。
 
 ## 安全与隐私
 
