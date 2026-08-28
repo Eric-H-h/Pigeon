@@ -1,4 +1,4 @@
-# OTPigeon V0.2.0 Alpha 8
+# Pigeon V0.2.0 Alpha 8
 
 这是只供项目所有者真机验证的本地构建，当前分支尚未推送 GitHub，也未合并到 `main`。
 
@@ -18,7 +18,7 @@
 
 - 直接使用 Windows 当前私有 IPv4 地址，不使用 `.local` 或 mDNS。
 - 每 5 秒检测地址变化并刷新窗口。
-- Windows 当前连接和 OTPigeon 防火墙权限都应使用“专用网络”。
+- Windows 当前连接和 Pigeon 防火墙权限都应使用“专用网络”。
 - 保留随机配对 token、私网来源限制、OTP 提取和敏感剪贴板写入。
 
 ## 真机验证重点
