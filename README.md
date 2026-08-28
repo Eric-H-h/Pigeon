@@ -54,9 +54,9 @@ Pigeon 是一个连接 iPhone 与 Windows 的本地工具：
 
 ## Shortcuts 配置教程
 
-[Shortcuts 配置教程（链接待补充）](#)
+[查看完整的 Windows + iPhone Shortcuts 图文教程](guide/iphone-shortcuts.html)
 
-这里暂不展开具体配置。之后可以把上面的占位链接替换为可直接导入的 Shortcut 或独立教程。
+教程包含 Windows SmartScreen、防火墙专用网络设置，以及 iPhone Message 自动化、`POST` 请求和 JSON 字段的完整配置。下载仓库后，可直接在浏览器中打开该 HTML 文件；其中使用的本地图片位于 `guide/assets/`。
 
 ## 进一步了解
 

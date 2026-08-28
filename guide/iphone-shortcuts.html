@@ -1,26 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pigeon · iPhone Shortcuts 配置指南（iOS 18.4.1）</title>
-  <meta name="description" content="按 iOS 18.4.1 英文 Shortcuts 界面，逐步配置 Send to Pigeon 与 Message Personal Automation。">
+  <meta name="description" content="Pigeon Windows 安装与 iPhone Shortcuts 短信验证码自动化图文教程。">
+  <title>Pigeon 安装与 Shortcuts 配置教程</title>
   <style>
     :root {
-      --ink: #1c1917;
-      --muted: #57534e;
-      --line: #e7e5e4;
-      --paper: #f6f3ee;
-      --card: #fffdf9;
-      --accent: #9a3412;
-      --hit: #f59e0b;
-      --ios-bg: #f2f2f7;
+      color-scheme: light;
+      --ink: #17212b;
+      --muted: #61707d;
+      --paper: #f7f9fa;
+      --surface: #ffffff;
+      --surface-2: #f0f4f5;
+      --line: #dce3e7;
+      --teal: #087f8c;
+      --teal-dark: #075f69;
+      --teal-soft: #e4f4f5;
       --ios-blue: #007aff;
-      --ios-sep: #c6c6c8;
+      --ios-bg: #f2f2f7;
       --ios-label: #1c1c1e;
       --ios-secondary: #8e8e93;
-      --phone-w: 310px;
-      --phone-h: 672px;
+      --hit: #f59e0b;
+      --green: #178a5a;
+      --shadow: 0 12px 32px rgba(35, 52, 64, 0.08);
+      --radius: 18px;
     }
 
     * { box-sizing: border-box; }
@@ -29,1226 +33,958 @@
       margin: 0;
       color: var(--ink);
       background: var(--paper);
-      font: 16px/1.6 "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", sans-serif;
+      font: 15px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei UI", sans-serif;
     }
-    a { color: var(--accent); }
-    code, .mono {
-      font-family: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
-    }
+    a { color: var(--teal-dark); }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    h1, h2, h3, p { margin-top: 0; }
+    img { max-width: 100%; }
 
-    .wrap {
-      max-width: 1120px;
+    .page {
+      width: min(960px, calc(100% - 40px));
       margin: 0 auto;
-      padding: 0 20px 80px;
     }
 
-    header.top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 22px 0 18px;
+    .site-header {
       border-bottom: 1px solid var(--line);
+      background: var(--surface);
     }
+    .header-inner { padding: 34px 0 30px; }
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: inherit;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
-    .mark {
+    .brand-mark {
       width: 36px;
       height: 36px;
       flex: none;
     }
-    .brand-name { font-weight: 700; letter-spacing: -0.03em; }
-    .brand-sub { color: var(--muted); font-size: 13px; }
-    .lang-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .lang-toggle button {
-      appearance: none;
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-      border-radius: 999px;
-      padding: 6px 12px;
-      cursor: pointer;
-      font: inherit;
-    }
-    .lang-toggle button[aria-pressed="true"] {
-      background: var(--ink);
-      color: #fff;
-      border-color: var(--ink);
-    }
-
-    .hero { padding: 36px 0 8px; max-width: 720px; }
     .kicker {
-      color: var(--accent);
+      margin: 0 0 10px;
+      color: var(--teal-dark);
       font-size: 12px;
-      font-weight: 650;
-      letter-spacing: 0.12em;
+      font-weight: 700;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
-    h1, h2, h3 { overflow-wrap: break-word; }
     h1 {
-      font-size: clamp(26px, 4vw, 42px);
+      max-width: 22em;
+      margin-bottom: 10px;
+      font-size: clamp(28px, 4vw, 40px);
       line-height: 1.18;
-      letter-spacing: -0.04em;
-      margin: 8px 0 12px;
+      letter-spacing: -0.032em;
     }
-    .lead { font-size: 18px; color: #44403c; overflow-wrap: break-word; }
+    .lead {
+      max-width: 42em;
+      margin-bottom: 22px;
+      color: var(--muted);
+      font-size: 17px;
+    }
 
-    .flow {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
+    .result-flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
       gap: 8px;
-      margin: 28px 0 8px;
+    }
+    .result-flow span {
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .result-flow b {
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(220, 227, 231, 0.92);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+    }
+    .toc-inner {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 10px 0;
+      scrollbar-width: none;
+    }
+    .toc-inner::-webkit-scrollbar { display: none; }
+    .toc a {
+      flex: 0 0 auto;
+      padding: 7px 11px;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .toc a:hover,
+    .toc a:focus-visible {
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+
+    main { padding: 34px 0 72px; }
+    section { scroll-margin-top: 72px; }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      margin: 8px 0 8px;
+    }
+    .section-kicker {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--teal);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    h2 {
+      margin-bottom: 4px;
+      font-size: clamp(24px, 3.2vw, 32px);
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+    .section-heading p { margin-bottom: 0; color: var(--muted); }
+
+    .prerequisites {
+      margin-bottom: 42px;
+      padding: 0 0 28px;
+      border-bottom: 1px solid var(--line);
+    }
+    .prerequisites h2 { font-size: 22px; }
+    .check-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0 0;
       padding: 0;
       list-style: none;
     }
-    .flow li {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px 12px 14px;
-      min-height: 92px;
+    .check-list li {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--surface-2);
     }
-    .flow b { display: block; font-size: 13px; margin-bottom: 4px; }
-    .flow span { color: var(--muted); font-size: 13px; }
-
-    .note, .warn, .ok {
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin: 18px 0;
-      overflow-wrap: break-word;
-    }
-    .note { background: #fff; border: 1px solid var(--line); }
-    .warn { background: #fff7ed; border: 1px solid #fed7aa; }
-    .ok { background: #f0fdf4; border: 1px solid #bbf7d0; }
-    .note strong, .warn strong, .ok strong { display: block; margin-bottom: 4px; }
-
-    nav.toc {
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      background: color-mix(in srgb, var(--paper) 88%, transparent);
-      backdrop-filter: blur(12px);
-      margin: 12px -20px 8px;
-      padding: 10px 20px;
-      border-bottom: 1px solid var(--line);
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-    nav.toc a {
-      color: var(--muted);
-      text-decoration: none;
-      margin-right: 18px;
-      font-size: 13px;
-    }
-    nav.toc a:hover { color: var(--ink); }
-
-    h2 {
-      font-size: 26px;
-      letter-spacing: -0.03em;
-      margin: 48px 0 10px;
-    }
-    h3 { font-size: 18px; margin: 0 0 8px; }
-    p { margin: 0 0 12px; }
-
-    .step {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) var(--phone-w);
-      gap: 36px;
-      align-items: start;
-      padding: 28px 0;
-      border-top: 1px solid var(--line);
-    }
-    .step-copy { padding-top: 8px; }
-    .step-index {
+    .check-list li::before {
+      content: "";
       display: inline-block;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.08em;
+      width: 8px;
+      height: 8px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      vertical-align: 1px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 0;
+      margin: 0 0 52px;
+      padding: 0;
+      list-style: none;
+      counter-reset: tutorial-step;
+    }
+    .step {
+      counter-increment: tutorial-step;
+      display: grid;
+      grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+      gap: 44px;
+      align-items: start;
+      padding: 34px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .step-copy h3 {
       margin-bottom: 8px;
+      font-size: 20px;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
     }
-    .checklist { padding-left: 18px; margin: 8px 0 14px; }
-    .checklist li { margin: 6px 0; }
-
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 4px 6px 4px 12px;
-      font-size: 13px;
-    }
-    .chip button {
-      appearance: none;
-      border: 0;
-      background: var(--ink);
-      color: #fff;
-      border-radius: 999px;
-      padding: 4px 10px;
-      cursor: pointer;
-      font: 12px/1 inherit;
-    }
-
-    .device {
-      position: sticky;
-      top: 58px;
-      margin: 0;
-    }
-    figcaption {
-      text-align: center;
-      color: var(--muted);
+    .step-copy h3::before {
+      content: counter(tutorial-step, decimal-leading-zero);
+      display: block;
+      margin-bottom: 6px;
+      color: var(--teal-dark);
       font-size: 12px;
-      margin-top: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+    .step-copy p:last-child { margin-bottom: 0; }
+    .step-visual { min-width: 0; }
+
+    code {
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: var(--teal-soft);
+      color: var(--teal-dark);
+      font-family: "SFMono-Regular", ui-monospace, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .grow { flex: 1 1 auto; min-height: 12px; }
+    .shot-button {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 100%;
+      min-height: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #eef2f4;
+      cursor: zoom-in;
+    }
+    .shot-button img {
+      display: block;
+      width: 100%;
+      max-height: 390px;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(20, 24, 28, 0.12);
+      background: #fff;
+    }
+    .shot-button::after {
+      content: "点击放大";
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(20, 24, 28, 0.78);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+    .shot-button:focus-visible {
+      outline: 3px solid rgba(15, 118, 110, 0.35);
+      outline-offset: 3px;
+    }
+    .figure-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .shortcut-intro {
+      margin: 12px 0 4px 50px;
+      padding: 12px 16px;
+      border-left: 3px solid var(--teal);
+      border-radius: 0 10px 10px 0;
+      background: var(--teal-soft);
+      color: #163c39;
+    }
+
+    .shortcut-steps .step {
+      grid-template-columns: minmax(220px, 0.72fr) minmax(280px, 1fr);
     }
 
     .phone {
-      width: var(--phone-w);
-      height: var(--phone-h);
-      background: #111;
-      border-radius: 42px;
-      padding: 11px;
-      box-shadow: 0 18px 50px rgba(28, 25, 23, 0.18);
+      width: min(100%, 286px);
+      margin: 0 auto;
+      padding: 9px;
+      border-radius: 36px;
+      background: #111214;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08) inset,
+        0 14px 30px rgba(17, 18, 20, 0.18);
     }
-    .screen {
+    .phone-screen {
       position: relative;
-      height: 100%;
-      background: var(--ios-bg);
-      border-radius: 32px;
+      display: flex;
+      flex-direction: column;
+      min-height: 500px;
+      padding: 42px 12px 18px;
+      border-radius: 28px;
       overflow: hidden;
-      font-family: -apple-system, "SF Pro Text", "Segoe UI", "PingFang SC", sans-serif;
+      background: var(--ios-bg);
       color: var(--ios-label);
+      font-family: -apple-system, "SF Pro Text", "Segoe UI", "PingFang SC", sans-serif;
     }
+    .phone.compact .phone-screen { min-height: 450px; }
     .island {
       position: absolute;
       top: 10px;
       left: 50%;
-      transform: translateX(-50%);
       width: 92px;
       height: 26px;
-      background: #000;
       border-radius: 20px;
-      z-index: 3;
+      background: #000;
+      transform: translateX(-50%);
     }
     .home-bar {
-      position: absolute;
-      left: 50%;
-      bottom: 7px;
-      transform: translateX(-50%);
       width: 108px;
       height: 4px;
-      background: #1c1c1e;
+      margin: 10px auto 0;
       border-radius: 4px;
-      z-index: 3;
+      background: #1c1c1e;
     }
-    .ios-body {
-      position: absolute;
-      inset: 42px 0 62px;
-      overflow: hidden;
-      padding: 0 14px;
-    }
-    .ios-body.sheet { inset: 42px 0 28px; }
-    .ios-body.scroll { overflow: auto; }
 
-    .head-row {
+    .ios-toolbar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 8px;
-    }
-    .large-title {
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      margin: 2px 0 14px;
-      min-width: 0;
-      flex: 1;
-    }
-    .plus {
-      position: relative;
-      flex: none;
-      width: 32px;
-      height: 32px;
-      margin: 2px -4px 14px 0;
-      color: var(--ios-blue);
-      font-size: 28px;
-      line-height: 30px;
-      text-align: center;
-      font-weight: 400;
-      z-index: 4;
-    }
-    .sc-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .sc-tile {
-      background: #fff;
-      border-radius: 18px;
-      height: 88px;
-    }
-    .section-h {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 8px 0 8px;
-    }
-    .nav-sheet {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      min-height: 36px;
-      margin-bottom: 10px;
-    }
-    .nav-sheet .left { color: var(--ios-blue); font-size: 17px; }
-    .nav-sheet .mid { text-align: center; font-weight: 650; }
-    .nav-sheet .right { color: var(--ios-blue); text-align: right; font-size: 17px; }
-    .chev { font-weight: 600; }
-
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 12px;
-      margin: 0 0 12px;
-    }
-    .card.tight { padding: 0; overflow: hidden; }
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      min-height: 44px;
-      padding: 8px 14px;
-    }
-    .row:has(.ic) { justify-content: flex-start; }
-    .row + .row { border-top: 0.5px solid #d1d1d6; }
-    .blue { color: var(--ios-blue); }
-    .muted { color: var(--ios-secondary); }
-    .check { color: var(--ios-blue); font-size: 18px; font-weight: 700; }
-
-    .icons {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      min-height: 28px;
       margin-bottom: 8px;
-    }
-    .ic {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      display: grid;
-      place-items: center;
-      flex: none;
-    }
-    .ic svg { width: 16px; height: 16px; display: block; }
-    .ic-in { background: #64d2ff; }
-    .ic-msg { background: #34c759; }
-    .ic-text { background: #ffcc00; }
-    .ic-url { background: #d6e9ff; }
-    .ic-get { background: #30d158; }
-    .ic-run { background: #5e5ce6; }
-    .ic-time { background: #007aff; }
-    .ic-alarm { background: #ff9f0a; }
-    .ic-mail { background: #007aff; }
-    .ic-wifi { background: #007aff; }
-    .ic-app { background: #ff375f; }
-    .ic-bat { background: #34c759; }
-
-    .title-2 { font-size: 15px; font-weight: 650; line-height: 1.3; }
-    .sub { color: var(--ios-secondary); font-size: 13px; margin-top: 3px; }
-    .arrow { color: #c7c7cc; }
-
-    .search {
-      background: #e3e3e8;
-      border-radius: 10px;
-      color: #6e6e73;
-      padding: 8px 12px;
-      font-size: 15px;
-      margin-bottom: 10px;
-    }
-
-    .tabbar {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 56px;
-      padding: 6px 8px 14px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      background: rgba(249,249,249,0.94);
-      border-top: 0.5px solid var(--ios-sep);
-    }
-    .tab {
-      text-align: center;
-      color: #8e8e93;
-      font-size: 10px;
-    }
-    .tab.on { color: var(--ios-blue); }
-    .tab .glyph { font-size: 18px; line-height: 1.1; }
-
-    .action {
-      background: #fff;
-      border-radius: 16px;
-      padding: 12px;
-      margin: 0 0 10px;
-      position: relative;
-    }
-    .action-h {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 650;
-    }
-    .action-h .x { margin-left: auto; color: #c7c7cc; font-size: 13px; }
-    .divider { height: 0.5px; background: #d1d1d6; margin: 8px 0; }
-    .chip-var {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #e8f1ff;
       color: var(--ios-blue);
-      border-radius: 7px;
-      padding: 2px 8px;
-      font-size: 14px;
       font-weight: 600;
     }
-    .url-line { color: var(--ios-blue); font-size: 14px; line-height: 1.35; word-break: break-all; }
-    .rail {
-      position: absolute;
-      left: 26px;
-      top: -10px;
-      width: 2px;
-      height: 12px;
-      background: #d1d1d6;
+    .ios-title {
+      margin: 0 0 16px;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
     }
-    .kv { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; font-size: 15px; }
-    .kv + .kv { border-top: 0.5px solid #eee; }
-    .field {
-      background: #f2f2f7;
-      border-radius: 10px;
-      padding: 8px 10px;
-      margin: 6px 0 10px;
+    .ios-nav {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
     }
+    .plus-button {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-top: 4px;
+      color: var(--ios-blue);
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 400;
+    }
+
+    .ios-card,
+    .action-card,
+    .ios-row,
+    .blank-tile {
+      background: #fff;
+    }
+    .ios-card {
+      padding: 14px;
+      border-radius: 16px;
+    }
+    .automation-summary {
+      font-size: 15px;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    .automation-summary small {
+      display: block;
+      margin-top: 4px;
+      color: var(--ios-secondary);
+      font-weight: 500;
+    }
+    .bottom-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding-top: 12px;
+      color: var(--ios-secondary);
+      font-size: 10px;
+      text-align: center;
+    }
+    .bottom-tabs span,
+    .bottom-tabs b {
+      display: grid;
+      gap: 3px;
+      justify-items: center;
+      font-weight: 500;
+    }
+    .bottom-tabs b { color: var(--ios-blue); font-weight: 650; }
+    .tab-glyph { font-size: 16px; line-height: 1; }
 
     .hit {
       position: relative;
       border-radius: 14px;
-      box-shadow: 0 0 0 3px var(--hit), 0 0 0 8px rgba(245, 158, 11, 0.22);
-      animation: pulse 2.2s ease-in-out infinite;
+      box-shadow: 0 0 0 3px var(--hit), 0 0 0 8px rgba(245, 158, 11, 0.18);
       z-index: 1;
     }
-    .plus.hit { position: relative; }
-    .alert.hit { position: absolute; }
     .hit-badge {
       position: absolute;
       top: -10px;
-      left: 6px;
-      width: 22px;
-      height: 22px;
+      left: -8px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: var(--hit);
       color: #1c1917;
-      font: 700 12px/22px "Segoe UI";
+      font: 700 11px/20px "Segoe UI", sans-serif;
       text-align: center;
-      z-index: 2;
     }
-    .plus .hit-badge {
-      left: auto;
-      right: -8px;
-      top: -8px;
-    }
-    .faded { opacity: 0.34; }
-    .tab.hit { border-radius: 10px; padding-top: 2px; }
+    .plus-button.hit { border-radius: 50%; }
+    .plus-button .hit-badge { left: auto; right: -8px; }
 
-    .alert {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      top: 210px;
-      background: rgba(242,242,247,0.96);
-      border-radius: 14px;
-      padding: 18px 14px 12px;
-      text-align: center;
-      box-shadow: 0 12px 40px rgba(0,0,0,.18);
-    }
-    .alert h4 { margin: 0 0 8px; font-size: 17px; }
-    .alert p { color: #3a3a3c; font-size: 13px; }
-    .alert-btns { display: grid; grid-template-columns: 1fr 1fr; border-top: 0.5px solid #d1d1d6; margin: 12px -14px -12px; }
-    .alert-btns span { padding: 11px; color: var(--ios-blue); }
-    .alert-btns span + span { border-left: 0.5px solid #d1d1d6; font-weight: 650; }
-
-    .safari-bar {
-      background: #fff;
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 13px;
-      color: #3a3a3c;
-      text-align: center;
-      margin-bottom: 18px;
-    }
-    .health {
-      background: #fff;
-      border-radius: 12px;
-      padding: 28px 12px;
-      text-align: center;
-      font-family: ui-monospace, Consolas, monospace;
-    }
-
-    .legend {
+    .ios-form { display: grid; gap: 10px; }
+    .ios-row {
       display: flex;
-      gap: 14px;
+      justify-content: space-between;
       align-items: center;
-      font-size: 13px;
-      color: var(--muted);
-      margin: 8px 0 0;
+      min-height: 48px;
+      padding: 10px 14px;
+      border-radius: 14px;
     }
-    .legend i {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      box-shadow: 0 0 0 3px var(--hit);
-      vertical-align: -2px;
-      margin-right: 6px;
+    .ios-value, .ios-link { color: var(--ios-blue); }
+    .selected { font-weight: 650; }
+    .selected::after {
+      content: "✓";
+      color: var(--ios-blue);
+      font-size: 18px;
+      font-weight: 700;
     }
 
-    .table-scroll { overflow-x: auto; margin: 12px 0; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
+    .blank-tile {
+      display: grid;
+      place-content: center;
+      min-height: 148px;
+      margin-top: 8px;
+      padding: 18px;
+      border-radius: 22px;
+      color: #3a3a3c;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+      text-align: center;
+    }
+    .blank-plus {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ios-secondary);
+      font-size: 28px;
+      font-weight: 400;
+    }
+
+    .action-flow { display: grid; gap: 10px; }
+    .action-card { padding: 12px; border-radius: 16px; }
+    .action-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .action-icon {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      color: white;
+      font-size: 15px;
+    }
+    .icon-text { background: #ffcc00; }
+    .icon-url { background: #d6e9ff; color: var(--ios-blue); }
+    .icon-get { background: #30d158; }
+    .variable {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: #e8f1ff;
+      color: var(--ios-blue);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .search-actions {
+      padding: 11px 12px;
+      border-radius: 12px;
+      background: #e5e5ea;
+      color: #6e6e73;
+      text-align: center;
+    }
+    .action-lines {
+      margin: 10px -12px -12px;
+      border-top: 0.5px solid #e5e5ea;
+    }
+    .action-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 9px 12px;
+      border-top: 0.5px solid #eee;
       font-size: 14px;
     }
-    th, td {
-      text-align: left;
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top;
+    .body-fields {
+      display: grid;
+      gap: 4px;
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 12px;
+      background: var(--ios-bg);
     }
-    th { background: #fafaf9; font-size: 12px; color: var(--muted); font-weight: 650; }
+    .body-field {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+    }
+    .field-key { font-family: "SFMono-Regular", Consolas, monospace; font-size: 13px; }
+    .field-value { color: #636366; font-size: 13px; }
 
-    details {
-      background: #fff;
-      border: 1px solid var(--line);
+    .important {
+      margin-top: 14px;
+      padding: 12px 14px;
       border-radius: 14px;
-      padding: 12px 16px;
-      margin: 12px 0;
+      background: #fff7e6;
+      color: #6b4e16;
     }
-    summary { cursor: pointer; font-weight: 650; }
 
-    footer.foot {
-      margin-top: 56px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
+    .verify-box {
+      padding: 24px;
+      border: 1px solid #c6e1d6;
+      border-radius: 14px;
+      background: #f1faf6;
+    }
+    .verify-box h2 { color: #146047; }
+    .verify-box p { color: #2d5b48; }
+    .verify-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .verify-flow li {
+      padding: 8px 12px;
+      border: 1px solid #c9eadb;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .verify-flow li + li::before {
+      content: "→";
+      margin-right: 8px;
+      color: var(--green);
+    }
+
+    footer {
+      padding: 22px 0 40px;
       color: var(--muted);
+      text-align: center;
       font-size: 13px;
     }
 
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 3px var(--hit), 0 0 0 8px rgba(245, 158, 11, 0.22); }
-      50% { box-shadow: 0 0 0 3px var(--hit), 0 0 0 12px rgba(245, 158, 11, 0.08); }
+    .address-note {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      margin: -18px 0 48px;
+      padding: 18px 20px;
+      border: 1px solid #c9dce0;
+      border-radius: 12px;
+      background: #eef7f8;
     }
+    .address-note strong { color: var(--teal-dark); }
+    .address-note p { margin: 0; }
+    .address-icon {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--teal);
+      color: #fff;
+      font-weight: 800;
+    }
+    .footer-links { margin-top: 6px; }
+    .footer-links a { margin: 0 6px; }
+
+    dialog {
+      width: min(96vw, 1180px);
+      max-height: 94vh;
+      padding: 48px 18px 18px;
+      border: 0;
+      border-radius: 20px;
+      background: #111417;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+    }
+    dialog::backdrop { background: rgba(8, 12, 18, 0.78); }
+    dialog img {
+      display: block;
+      max-width: 100%;
+      max-height: calc(94vh - 70px);
+      margin: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .dialog-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 50%;
+      background: #fff;
+      color: #111;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 760px) {
+      .page { width: min(100% - 20px, 680px); }
+      .header-inner { padding: 28px 0 22px; }
+      .check-list { grid-template-columns: 1fr; }
+      .step, .shortcut-steps .step {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 18px;
+      }
+      .shortcut-intro { margin-left: 0; }
+      .phone { width: min(100%, 286px); }
+      .address-note { grid-template-columns: 1fr; margin-top: -10px; }
+      .verify-flow { display: grid; }
+      .verify-flow li + li::before { content: "↓"; }
+      .shot-button::after { display: none; }
+      h1 { font-size: 28px; }
+      .result-flow span { font-size: 13px; padding: 7px 11px; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .hit { animation: none; }
       html { scroll-behavior: auto; }
     }
-    @media (max-width: 880px) {
-      .step { grid-template-columns: 1fr; }
-      .device { position: static; justify-self: center; }
-      .flow { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 560px) {
-      .flow { grid-template-columns: 1fr; }
-      header.top { flex-direction: column; align-items: flex-start; }
-      h1 { font-size: 26px; }
-      h2 { font-size: 22px; }
-      .lead { font-size: 16px; }
-      table { min-width: 520px; }
-    }
+
     @media print {
-      nav.toc, .lang-toggle, .chip button { display: none; }
-      .device { position: static; break-inside: avoid; }
-      .step { break-inside: avoid; }
+      .toc, .dialog-close, .shot-button::after { display: none; }
+      body { background: white; }
+      .page { width: 100%; }
+      .step { break-inside: avoid; box-shadow: none; }
+      .shot-button { cursor: default; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="top">
-      <a class="brand" href="#top">
-        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-          <rect width="32" height="32" rx="9" fill="#1c1917"/>
-          <path fill="#fafaf9" d="M7.5 19c3.8-7.2 11.2-9.2 15.5-5.2-1.7.8-2.8 2.4-3.1 4.2 2.6.1 5.3 1.6 6.6 4.2-5.2.8-9.7-.3-12.8-2.4-1.6 1.7-3.5 2.7-5.7 3 1-1.4 1.1-2.6-.5-3.8z"/>
+  <header class="site-header">
+    <div class="page header-inner">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true">
+          <rect width="36" height="36" rx="10" fill="#0f766e"/>
+          <path fill="#f3f6f5" d="M8.5 21c4.2-7.6 12.2-9.6 16.8-5.4-1.8.8-3 2.5-3.3 4.4 2.8.2 5.7 1.7 7.1 4.4-5.6.9-10.4-.3-13.8-2.5-1.7 1.8-3.8 2.9-6.2 3.2 1.1-1.5 1.2-2.8-.6-4.1z"/>
         </svg>
-        <span>
-          <span class="brand-name">Pigeon</span><br>
-          <span class="brand-sub">iPhone 配置指南 · iOS 18.4.1</span>
-        </span>
-      </a>
-      <div class="lang-toggle">
-        界面插图
-        <button type="button" id="lang-en" aria-pressed="true">English</button>
-        <button type="button" id="lang-zh" aria-pressed="false">中文</button>
+        Pigeon
       </div>
-    </header>
+      <p class="kicker">Setup guide</p>
+      <h1>安装 Pigeon，<br>并让验证码自动到达 Windows</h1>
+      <p class="lead">先在电脑上启动 Pigeon，再用 iPhone Shortcuts 建立短信自动化。设置一次，以后网站发送验证码后，直接在 Windows 按 <strong>Ctrl + V</strong>。</p>
+      <div class="result-flow" aria-label="使用效果">
+        <span>网站发送验证码</span><b>→</b><span>iPhone 自动转发</span><b>→</b><span>Ctrl + V</span>
+      </div>
+    </div>
+  </header>
 
-    <nav class="toc" aria-label="本页目录">
-      <a href="#how">原理</a>
+  <nav class="toc" aria-label="页面导航">
+    <div class="page toc-inner">
       <a href="#before">开始前</a>
-      <a href="#shortcut">普通 Shortcut</a>
-      <a href="#automation">个人自动化</a>
-      <a href="#verify">验收</a>
-      <a href="#ip">地址变化</a>
-      <a href="#names">中英文对照</a>
-      <a href="#faq">常见问题</a>
-    </nav>
+      <a href="#windows">启动 Pigeon</a>
+      <a href="#shortcuts">配置 Shortcuts</a>
+      <a href="#address">IP 变化</a>
+      <a href="#verify">验证结果</a>
+    </div>
+  </nav>
 
-    <section class="hero" id="top">
-      <div class="kicker">Setup guide</div>
-      <h1>把验证码短信送到<br>Windows 剪贴板</h1>
-      <p class="lead">这页只讲 iPhone。Windows 程序窗口还在制作，你只要让电脑上的服务处于运行状态，并拿到它显示的地址和配对 Token。插图按 <strong>iOS 18.4.1、英文 Shortcuts</strong> 绘制，并对照了真机截图；需要看中文系统界面时，点右上角切换。</p>
-      <p class="legend"><i></i>橙色描边表示这一步要点的位置</p>
+  <main class="page">
+    <section id="before" class="prerequisites">
+      <h2>开始前</h2>
+      <ul class="check-list">
+        <li>解压完整的 Pigeon ZIP</li>
+        <li>iPhone 与电脑连接同一台路由器</li>
+        <li>Windows 当前网络设为“专用网络”</li>
+      </ul>
     </section>
 
-    <ul class="flow" id="how">
-      <li><b>1. 网页发码</b><span>你自己点「发送验证码」</span></li>
-      <li><b>2. iPhone 收短信</b><span>锁屏也可以</span></li>
-      <li><b>3. Shortcuts 转发</b><span>局域网 HTTP POST</span></li>
-      <li><b>4. Windows 提取</b><span>只在电脑内存里处理</span></li>
-      <li><b>5. Ctrl+V</b><span>验证码已在剪贴板</span></li>
-    </ul>
-
-    <div class="ok">
-      <strong>隐私边界</strong>
-      运行时短信和验证码不经过云端、也不经过大模型。Apple 分享 Shortcut 文件时会走它自己的验证机制，那是 Shortcut 定义，不是你的短信内容。
-    </div>
-
-    <h2>你要配两样东西</h2>
-    <p>不要把整条 HTTP 逻辑只写在个人自动化里。个人自动化没法作为主要分享单元；普通 Shortcut 可以。</p>
-    <div class="table-scroll">
-    <table>
-      <thead>
-        <tr><th>这块</th><th>名称</th><th>作用</th><th>能不能分享</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>普通 Shortcut</td>
-          <td><span class="mono">Send to Pigeon</span></td>
-          <td>把短信正文 POST 到电脑的 <span class="mono">/otp</span></td>
-          <td>可以。别人导入时填自己的地址和 Token。</td>
-        </tr>
-        <tr>
-          <td>Personal Automation</td>
-          <td>Message 触发</td>
-          <td>短信包含「验证码」时立刻运行上面的 Shortcut</td>
-          <td>不能当主分享物。每个人在自己手机上建一次。</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-
-    <h2 id="before">开始前</h2>
-    <ul class="checklist">
-      <li>iPhone 系统为 iOS 18.4.1 或同代 Shortcuts。本页按 18.4.1 英文界面。</li>
-      <li>iPhone 已连上 Windows 热点，或同一台可信的家庭路由器。不要依赖酒店、校园、公司访客 Wi-Fi。</li>
-      <li>Windows 上 Pigeon 已经在运行。</li>
-      <li>准备两样从电脑复制的值：<strong>Shortcut URL</strong> 和 <strong>Pairing token</strong>。</li>
-    </ul>
-    <div class="chips">
-      <span class="chip"><span class="mono">验证码</span><button type="button" data-copy="验证码">复制</button></span>
-      <span class="chip"><span class="mono">Send to Pigeon</span><button type="button" data-copy="Send to Pigeon">复制</button></span>
-      <span class="chip"><span class="mono">token</span><button type="button" data-copy="token">复制</button></span>
-      <span class="chip"><span class="mono">text</span><button type="button" data-copy="text">复制</button></span>
-      <span class="chip"><span class="mono">/otp</span><button type="button" data-copy="/otp">复制</button></span>
-    </div>
-
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 0</div>
-        <h3>先用 Safari 确认手机能访问电脑</h3>
-        <p>还不要做 Shortcut。复制 Pigeon 窗口中的完整 URL，把末尾 <span class="mono">/otp</span> 临时替换为 <span class="mono">/health</span>，再在 iPhone Safari 打开：</p>
-        <p class="mono">http://你的PC地址:8765/health</p>
-        <p>页面出现 <span class="mono">OK</span> 字样就可以往下走。这一步能排除「根本没连上」：热点、防火墙、地址填错，都会在这里暴露。</p>
-        <div class="warn">
-          <strong>还没 OK？先别配 Shortcuts</strong>
-          确认 iPhone 与电脑在同一可信局域网，Windows 当前连接和 Pigeon 防火墙权限都使用专用网络，并且地址没有写成 127.0.0.1。如果只有切成公用网络才成功，说明防火墙权限勾反了。
+    <section id="windows">
+      <div class="section-heading">
+        <div class="section-kicker">A</div>
+        <div>
+          <h2>在 Windows 上启动 Pigeon</h2>
+          <p>完成后，Pigeon 窗口会给出 Shortcuts 需要的 URL 和配对 token。</p>
         </div>
       </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet">
-            <div class="safari-bar"><span class="mono">http://PC_ADDRESS:8765/health</span></div>
-            <div class="health">Pigeon OK</div>
-            <p class="muted" style="text-align:center;font-size:12px;margin-top:14px;">当前 PoC 也可能显示 OTP Bridge OK</p>
+
+      <ol class="steps">
+        <li class="step">
+          <div class="step-copy">
+            <h3>解压并运行 Pigeon.exe</h3>
+            <p>下载 ZIP 后先完整解压，再双击 <code>Pigeon.exe</code>。SmartScreen 出现时点击<strong>“仍要运行”</strong>。</p>
           </div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 0 · Safari 健康检查</figcaption>
-      </figure>
-    </div>
+          <figure class="step-visual">
+            <button class="shot-button" type="button" data-full="assets/pigeon-setup/windows-smartscreen.png" aria-label="放大查看 SmartScreen 截图">
+              <img src="assets/pigeon-setup/windows-smartscreen.png" alt="Windows SmartScreen 界面，仍要运行按钮位于右下方">
+            </button>
+            <figcaption class="figure-note">点击图片可放大</figcaption>
+          </figure>
+        </li>
 
-    <h2 id="shortcut">第一部分：创建普通 Shortcut</h2>
-    <p>先做出 <span class="mono">Send to Pigeon</span>。以后 Message 自动化只负责「在收到短信时运行它」。iPhone 不解析验证码，解析留在 Windows。</p>
-
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 1</div>
-        <h3>打开 Shortcuts，新建一条</h3>
-        <ol class="checklist">
-          <li>打开 <strong class="ui" data-en="Shortcuts" data-zh="快捷指令">Shortcuts</strong> 应用。</li>
-          <li>确认底部选中左边的 <strong class="ui" data-en="Shortcuts" data-zh="快捷指令">Shortcuts</strong> 标签，不是 <span class="ui" data-en="Automation" data-zh="自动化">Automation</span>。</li>
-          <li>点右上角 <strong>+</strong>。</li>
-        </ol>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body">
-            <div class="head-row">
-              <div class="large-title ui" data-en="Shortcuts" data-zh="快捷指令">Shortcuts</div>
-              <div class="plus hit">+<span class="hit-badge">1</span></div>
-            </div>
-            <div class="sc-grid">
-              <div class="sc-tile" style="opacity:.45"></div>
-              <div class="sc-tile" style="opacity:.28"></div>
-            </div>
+        <li class="step">
+          <div class="step-copy">
+            <h3>只允许专用网络</h3>
+            <p>防火墙弹窗中勾选<strong>“专用网络”</strong>，不要勾选“公用网络”，然后点击“允许”。</p>
           </div>
-          <nav class="tabbar">
-            <div class="tab on"><div class="glyph">▣</div><span class="ui" data-en="Shortcuts" data-zh="快捷指令">Shortcuts</span></div>
-            <div class="tab"><div class="glyph">✓</div><span class="ui" data-en="Automation" data-zh="自动化">Automation</span></div>
-            <div class="tab"><div class="glyph">✧</div><span class="ui" data-en="Gallery" data-zh="图库">Gallery</span></div>
-          </nav>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 1 · 在 Shortcuts 标签新建</figcaption>
-      </figure>
-    </div>
+          <figure class="step-visual">
+            <button class="shot-button" type="button" data-full="assets/pigeon-setup/windows-firewall-private.png" aria-label="放大查看 Windows 防火墙截图">
+              <img src="assets/pigeon-setup/windows-firewall-private.png" alt="Windows 防火墙界面，专用网络已经勾选">
+            </button>
+            <figcaption class="figure-note">确保“专用网络”已勾选</figcaption>
+          </figure>
+        </li>
 
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 2</div>
-        <h3>改名，并加入三个动作</h3>
-        <p>点顶部名称，改成 <span class="mono">Send to Pigeon</span>。底部搜索栏依次加入：</p>
-        <ol class="checklist">
-          <li><strong class="ui" data-en="Text" data-zh="文本">Text</strong>：内容选变量 <span class="ui" data-en="Shortcut Input" data-zh="快捷指令输入">Shortcut Input</span>。不要手打短信。</li>
-          <li><strong>URL</strong>：直接粘贴 Pigeon 窗口“快捷指令 URL”框中的完整内容；它已经以 <span class="mono">/otp</span> 结尾。</li>
-          <li><strong class="ui" data-en="Get Contents of URL" data-zh="获取 URL 内容">Get Contents of URL</strong>：下一步再展开改 POST。</li>
-        </ol>
-        <p>URL 的最终形态必须是下面这样。不要再次添加 <span class="mono">http://</span> 或 <span class="mono">/otp</span>：</p>
-        <p class="mono">http://PC_ADDRESS:8765/otp</p>
-        <div class="note">
-          <strong>为什么要先放一个 Text？</strong>
-          短信原文先变成 Text 动作的输出，下一步 JSON 的 <span class="mono">text</span> 字段才能稳定引用它。不要在 iPhone 上提取验证码。
+        <li class="step">
+          <div class="step-copy">
+            <h3>复制 URL 和配对 token</h3>
+            <p>保持 Pigeon 运行。稍后需要复制窗口中的<strong>“快捷指令 URL”</strong>和<strong>“配对 token”</strong>。</p>
+          </div>
+          <figure class="step-visual">
+            <button class="shot-button" type="button" data-full="assets/pigeon-setup/pigeon-main-window.png" aria-label="放大查看 Pigeon 主界面">
+              <img src="assets/pigeon-setup/pigeon-main-window.png" alt="Pigeon 主界面，快捷指令 URL 和配对 token 已标出">
+            </button>
+            <figcaption class="figure-note">URL 必须以 <code>/otp</code> 结尾</figcaption>
+          </figure>
+        </li>
+      </ol>
+    </section>
+
+    <section id="shortcuts">
+      <div class="section-heading">
+        <div class="section-kicker">B</div>
+        <div>
+          <h2>在 iPhone 上配置 Shortcuts</h2>
+          <p>下面的界面是根据实际截图简化的示意图，只保留需要点击和填写的内容。</p>
         </div>
       </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet scroll">
-            <div class="nav-sheet">
-              <span class="left chev">‹</span>
-              <span class="mid mono" style="font-size:13px">Send to Pigeon</span>
-              <span class="right ui" data-en="Done" data-zh="完成">Done</span>
-            </div>
-            <div class="action">
-              <div class="action-h">
-                <span class="ic ic-in"><svg viewBox="0 0 16 16" fill="none"><path d="M3 9h10v5H3z" stroke="#fff" stroke-width="1.6"/><path d="M8 2v7M5.5 6.5 8 9l2.5-2.5" stroke="#fff" stroke-width="1.6" fill="none"/></svg></span>
-                <span class="ui" data-en="Receive Text as input" data-zh="接收文本作为输入">Receive Text as input</span>
+      <p class="shortcut-intro"><strong>最终结构：</strong>Text 读取短信正文 → URL 指向 Pigeon → Get Contents of URL 使用 POST 发送 JSON。</p>
+
+      <ol class="steps shortcut-steps">
+        <li class="step">
+          <div class="step-copy">
+            <h3>进入 Automation</h3>
+            <p>打开 Shortcuts，点击底部 <strong>Automation</strong>，再点击右上角 <strong>+</strong>。</p>
+          </div>
+          <div class="step-visual phone compact" aria-label="Automation 页面示意图">
+            <div class="phone-screen">
+              <div class="island"></div>
+              <div class="ios-nav">
+                <h4 class="ios-title">Automation</h4>
+                <span class="plus-button hit" aria-hidden="true">＋<span class="hit-badge">1</span></span>
               </div>
-            </div>
-            <div class="action">
-              <div class="rail"></div>
-              <div class="action-h">
-                <span class="ic ic-text"><svg viewBox="0 0 16 16" fill="none"><path d="M4 5h8M4 8h8M4 11h5" stroke="#fff" stroke-width="1.8"/></svg></span>
-                <span class="ui" data-en="Text" data-zh="文本">Text</span>
-                <span class="x">✕</span>
+              <div class="ios-card automation-summary">When I Get a Message Containing ‘验证码’<small>Text, URL, and Get Contents of URL</small></div>
+              <div class="grow"></div>
+              <div class="bottom-tabs">
+                <span><span class="tab-glyph">▣</span>Shortcuts</span>
+                <b><span class="tab-glyph">✓</span>Automation</b>
+                <span><span class="tab-glyph">✧</span>Gallery</span>
               </div>
-              <div class="divider"></div>
-              <span class="chip-var ui" data-en="Shortcut Input" data-zh="快捷指令输入">Shortcut Input</span>
-            </div>
-            <div class="action hit">
-              <span class="hit-badge">2</span>
-              <div class="rail"></div>
-              <div class="action-h">
-                <span class="ic ic-url"><svg viewBox="0 0 16 16" fill="none"><path d="M6 10 4.5 8.5a3 3 0 0 1 4.2-4.2L10 5.5M10 6l1.5 1.5a3 3 0 0 1-4.2 4.2L6 10.5" stroke="#007aff" stroke-width="1.6"/></svg></span>
-              </div>
-              <div class="url-line">http://PC_ADDRESS:8765/<strong>otp</strong></div>
-            </div>
-            <div class="action">
-              <div class="rail"></div>
-              <div class="action-h">
-                <span class="ic ic-get"><svg viewBox="0 0 16 16" fill="none"><path d="M3 9h10v5H3z" stroke="#fff" stroke-width="1.6"/><path d="M8 2v7M5.5 6.5 8 9l2.5-2.5" stroke="#fff" stroke-width="1.6"/></svg></span>
-                <span class="ui" data-en="Get contents of" data-zh="获取内容">Get contents of</span>
-                <span class="chip-var">URL</span>
-                <span class="x">›</span>
-              </div>
+              <div class="home-bar"></div>
             </div>
           </div>
-          <div class="search" style="position:absolute;left:14px;right:14px;bottom:36px"><span class="ui" data-en="Search Actions" data-zh="搜索操作">Search Actions</span></div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 2 · 三个动作的顺序</figcaption>
-      </figure>
-    </div>
+        </li>
 
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 3</div>
-        <h3>把 Get Contents of URL 改成 POST JSON</h3>
-        <p>这是最容易漏的一步。点该动作右侧的 <strong>›</strong>，或点 <strong class="ui" data-en="Show More" data-zh="显示更多">Show More</strong>。</p>
-        <ol class="checklist">
-          <li><span class="ui" data-en="Method" data-zh="方法">Method</span> 改成 <strong>POST</strong>。默认 GET 发不出短信。</li>
-          <li><span class="ui" data-en="Headers" data-zh="标头">Headers</span> 不用改。</li>
-          <li><span class="ui" data-en="Request Body" data-zh="请求正文">Request Body</span> 选 <strong>JSON</strong>。</li>
-          <li>添加两个字段，键名必须是英文小写：</li>
-        </ol>
-        <div class="table-scroll">
-        <table>
-          <thead><tr><th>Key</th><th>类型</th><th>Value</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">token</td><td>Text</td><td>Windows 上的 Pairing Token，原样粘贴</td></tr>
-            <tr><td class="mono">text</td><td>Text</td><td>点变量，选上一步 <span class="ui" data-en="Text" data-zh="文本">Text</span> 的输出，不要手打</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="warn">
-          <strong>键名不要翻译</strong>
-          写成「令牌」或「短信」都会失败。Windows 只认 <span class="mono">token</span> 和 <span class="mono">text</span>。
-        </div>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet scroll">
-            <div class="nav-sheet">
-              <span class="left chev">‹</span>
-              <span class="mid"></span>
-              <span class="right ui" data-en="Done" data-zh="完成">Done</span>
-            </div>
-            <div class="action hit">
-              <span class="hit-badge">3</span>
-              <div class="action-h">
-                <span class="ic ic-get"><svg viewBox="0 0 16 16" fill="none"><path d="M3 9h10v5H3z" stroke="#fff" stroke-width="1.6"/><path d="M8 2v7M5.5 6.5 8 9l2.5-2.5" stroke="#fff" stroke-width="1.6"/></svg></span>
-                <span class="ui" data-en="Get contents of" data-zh="获取内容">Get contents of</span>
-                <span class="chip-var">URL</span>
+        <li class="step">
+          <div class="step-copy">
+            <h3>设置短信触发条件</h3>
+            <p>选择 <strong>Message</strong>，在 <strong>Message Contains</strong> 中填写“验证码”，选择 <strong>Run Immediately</strong>，然后点击 <strong>Next</strong>。</p>
+          </div>
+          <div class="step-visual phone compact" aria-label="Message 自动化设置示意图">
+            <div class="phone-screen">
+              <div class="island"></div>
+              <div class="ios-toolbar"><span>‹ Back</span><strong class="hit">Next<span class="hit-badge">2</span></strong></div>
+              <div class="ios-title">When</div>
+              <div class="ios-form">
+                <div class="ios-row"><span>Sender</span><span class="ios-link">Choose</span></div>
+                <div class="ios-row hit"><span class="hit-badge">3</span><span>Message Contains</span><span class="ios-value">验证码</span></div>
+                <div class="ios-row selected"><span>Run Immediately</span></div>
               </div>
-              <div class="divider"></div>
-              <div class="kv"><span class="ui" data-en="Method" data-zh="方法">Method</span><span class="blue">POST</span></div>
-              <div class="kv"><span class="ui" data-en="Headers" data-zh="标头">Headers</span><span class="muted"></span></div>
-              <div class="kv"><span class="ui" data-en="Request Body" data-zh="请求正文">Request Body</span><span class="blue">JSON</span></div>
-              <div class="field">
-                <div class="kv" style="padding-top:0"><span class="mono">token</span><span class="muted">Text</span></div>
-                <span class="chip-var">PAIRING_TOKEN</span>
-              </div>
-              <div class="field">
-                <div class="kv" style="padding-top:0"><span class="mono">text</span><span class="muted">Text</span></div>
-                <span class="chip-var ui" data-en="Text" data-zh="文本">Text</span>
-              </div>
+              <div class="grow"></div>
+              <div class="home-bar"></div>
             </div>
           </div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 3 · POST + JSON 字段</figcaption>
-      </figure>
-    </div>
+        </li>
 
-    <h2 id="automation">第二部分：创建 Message 个人自动化</h2>
-    <p>普通 Shortcut 不会自己跑。要让锁屏状态下的验证码短信触发它，必须再做一次 Personal Automation。</p>
-
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 4</div>
-        <h3>到 Automation 标签，点 +</h3>
-        <p>底部中间是 <strong class="ui" data-en="Automation" data-zh="自动化">Automation</strong>。如果这是你的第一条自动化，界面可能先出现 <strong class="ui" data-en="Create Personal Automation" data-zh="创建个人自动化">Create Personal Automation</strong>，点它即可。已经有自动化时，点右上角 <strong>+</strong>。</p>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body">
-            <div class="head-row">
-              <div class="large-title ui" data-en="Automation" data-zh="自动化">Automation</div>
-              <div class="plus hit">+<span class="hit-badge">4</span></div>
-            </div>
-            <div class="section-h ui" data-en="Personal" data-zh="个人">Personal</div>
-            <p class="muted" style="font-size:13px">还没有自动化时，这里是空的。</p>
+        <li class="step">
+          <div class="step-copy">
+            <h3>新建空白自动化</h3>
+            <p>点击 <strong>New Blank Automation</strong>，进入动作编辑器。</p>
           </div>
-          <nav class="tabbar">
-            <div class="tab"><div class="glyph">▣</div><span class="ui" data-en="Shortcuts" data-zh="快捷指令">Shortcuts</span></div>
-            <div class="tab on"><div class="glyph">✓</div><span class="ui" data-en="Automation" data-zh="自动化">Automation</span></div>
-            <div class="tab"><div class="glyph">✧</div><span class="ui" data-en="Gallery" data-zh="图库">Gallery</span></div>
-          </nav>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 4 · Automation 标签</figcaption>
-      </figure>
-    </div>
-
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 5</div>
-        <h3>触发器选 Message</h3>
-        <p>在列表里找到 <strong class="ui" data-en="Message" data-zh="信息">Message</strong>。不要选 <span class="ui" data-en="Email" data-zh="邮件">Email</span>，也不要选 App。验证码来自短信，不是来自某个 App 的通知。</p>
-        <p>插图把其余项目降低对比度，这是教程简化，真机上列表会更长。</p>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet">
-            <div class="nav-sheet">
-              <span class="left ui" data-en="Cancel" data-zh="取消">Cancel</span>
-              <span class="mid ui" data-en="New Automation" data-zh="新建自动化">New Automation</span>
-              <span></span>
+          <div class="step-visual phone compact" aria-label="New Blank Automation 示意图">
+            <div class="phone-screen">
+              <div class="island"></div>
+              <div class="ios-title" style="font-size:26px">When I Get a Message Containing ‘验证码’</div>
+              <div class="blank-tile hit"><span class="hit-badge">4</span><span class="blank-plus">＋</span>New Blank<br>Automation</div>
+              <div class="grow"></div>
+              <div class="home-bar"></div>
             </div>
-            <div class="search ui" data-en="Search Automations" data-zh="搜索自动化">Search Automations</div>
-            <div class="card tight">
-              <div class="row faded"><span class="ic ic-time"></span><span class="ui" data-en="Time of Day" data-zh="时间">Time of Day</span></div>
-              <div class="row faded"><span class="ic ic-alarm"></span><span class="ui" data-en="Alarm" data-zh="闹钟">Alarm</span></div>
-              <div class="row faded"><span class="ic ic-mail"></span><span class="ui" data-en="Email" data-zh="邮件">Email</span></div>
-              <div class="row hit">
-                <span class="hit-badge">5</span>
-                <span class="ic ic-msg"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10v7H6l-3 3V4z" fill="#fff"/></svg></span>
-                <span class="ui" data-en="Message" data-zh="信息">Message</span>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-copy">
+            <h3>添加 Text 和 Shortcut Input</h3>
+            <p>点击 <strong>Search Actions</strong>，添加 <strong>Text</strong>。在 Text 内容中插入变量 <strong>Shortcut Input</strong>。</p>
+          </div>
+          <div class="step-visual phone compact" aria-label="Text 动作设置示意图">
+            <div class="phone-screen">
+              <div class="island"></div>
+              <div class="ios-toolbar"><span></span><span>Done</span></div>
+              <div class="action-flow">
+                <div class="action-card">
+                  <div class="action-title"><span class="action-icon icon-text">≡</span>Text</div>
+                  <span class="variable hit">Shortcut Input<span class="hit-badge">5</span></span>
+                </div>
               </div>
-              <div class="row faded"><span class="ic ic-wifi"></span><span>Wi-Fi</span></div>
-              <div class="row faded"><span class="ic ic-app"></span><span class="ui" data-en="App" data-zh="App">App</span></div>
-              <div class="row faded"><span class="ic ic-bat"></span><span class="ui" data-en="Battery Level" data-zh="电量">Battery Level</span></div>
+              <div class="grow"></div>
+              <div class="search-actions hit">⌕　Search Actions<span class="hit-badge">6</span></div>
+              <div class="home-bar"></div>
             </div>
           </div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 5 · 选择 Message 触发器</figcaption>
-      </figure>
-    </div>
+        </li>
 
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 6</div>
-        <h3>包含「验证码」，并且立即运行</h3>
-        <p>这一屏必须和真机一致，三项都不要改错：</p>
-        <ol class="checklist">
-          <li><strong class="ui" data-en="Sender" data-zh="发送人">Sender</strong> 保持 <span class="ui" data-en="Choose" data-zh="选择">Choose</span>，<strong>不要选联系人</strong>。验证码号码每次都可能不同。</li>
-          <li><strong class="ui" data-en="Message Contains" data-zh="信息包含">Message Contains</strong> 填 <span class="mono">验证码</span>。多数国内短信用这三个字；只写 code 会漏掉中文短信。</li>
-          <li>必须勾 <strong class="ui" data-en="Run Immediately" data-zh="立即运行">Run Immediately</strong>。如果留在 <span class="ui" data-en="Run After Confirmation" data-zh="运行前询问">Run After Confirmation</span>，锁屏时还要你点确认，这条链路就没有意义。</li>
-        </ol>
-        <p>然后点右上角 <strong class="ui" data-en="Next" data-zh="下一步">Next</strong> 或 <strong class="ui" data-en="Done" data-zh="完成">Done</strong>。</p>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet">
-            <div class="nav-sheet">
-              <span class="left"><span class="chev">‹</span> <span class="ui" data-en="Back" data-zh="返回">Back</span></span>
-              <span class="mid ui" data-en="Message" data-zh="信息">Message</span>
-              <span class="right ui" data-en="Next" data-zh="下一步">Next</span>
-            </div>
-            <div class="section-h ui" data-en="When" data-zh="当">When</div>
-            <div class="card tight">
-              <div class="row">
-                <span class="ui" data-en="Sender" data-zh="发送人">Sender</span>
-                <span class="blue ui" data-en="Choose" data-zh="选择">Choose</span>
+        <li class="step">
+          <div class="step-copy">
+            <h3>读取 Content，并添加请求</h3>
+            <p>再次点击 <strong>Shortcut Input</strong>，将属性改成 <strong>Content</strong>。然后依次添加 <strong>URL</strong> 和 <strong>Get Contents of URL</strong>。</p>
+            <p>URL 填写 Pigeon 显示的完整地址；请求方法改成 <strong>POST</strong>，Request Body 选择 <strong>JSON</strong>。</p>
+          </div>
+          <div class="step-visual phone" aria-label="URL 与 POST 请求设置示意图">
+            <div class="phone-screen">
+              <div class="island"></div>
+              <div class="ios-toolbar"><span></span><span>Done</span></div>
+              <div class="action-flow">
+                <div class="action-card">
+                  <div class="action-title"><span class="action-icon icon-text">≡</span>Text</div>
+                  <span class="variable hit">Content<span class="hit-badge">7</span></span>
+                </div>
+                <div class="action-card hit">
+                  <span class="hit-badge">8</span>
+                  <div class="action-title"><span class="action-icon icon-url">↗</span>URL</div>
+                  <span class="ios-link">http://电脑IP:8765/otp</span>
+                </div>
+                <div class="action-card">
+                  <div class="action-title"><span class="action-icon icon-get">↓</span>Get Contents of <span class="variable">URL</span></div>
+                  <div class="action-lines">
+                    <div class="action-line"><span>Method</span><strong class="ios-link">POST</strong></div>
+                    <div class="action-line"><span>Request Body</span><strong class="ios-link">JSON</strong></div>
+                  </div>
+                </div>
               </div>
+              <div class="grow"></div>
+              <div class="home-bar"></div>
             </div>
-            <div class="card tight hit">
-              <span class="hit-badge">6</span>
-              <div class="row">
-                <span class="ui" data-en="Message Contains" data-zh="信息包含">Message Contains</span>
-                <span class="blue">验证码</span>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-copy">
+            <h3>填写两个 JSON 字段</h3>
+            <p>在 Request Body 中添加两个 <strong>Text</strong> 字段：</p>
+            <p><code>token</code> 填入 Pigeon 的配对 token；<code>text</code> 选择前面 Text 动作的输出。完成后点击 <strong>Done</strong>。</p>
+            <p class="important">字段名必须是小写的 <strong>token</strong> 和 <strong>text</strong>。第二个值要选择黄色的 Text 变量，不要手动输入单词“Text”。</p>
+          </div>
+          <div class="step-visual phone" aria-label="完整自动化示意图">
+            <div class="phone-screen">
+              <div class="island"></div>
+              <div class="ios-toolbar"><span></span><span class="ios-link">Done</span></div>
+              <div class="action-flow">
+                <div class="action-card">
+                  <div class="action-title"><span class="action-icon icon-text">≡</span>Text</div>
+                  <span class="variable">Content</span>
+                </div>
+                <div class="action-card">
+                  <div class="action-title"><span class="action-icon icon-url">↗</span>URL</div>
+                  <span class="ios-link">http://192.168.x.x:8765/otp</span>
+                </div>
+                <div class="action-card hit">
+                  <span class="hit-badge">9</span>
+                  <div class="action-title"><span class="action-icon icon-get">↓</span>Get Contents of <span class="variable">URL</span></div>
+                  <div class="action-lines">
+                    <div class="action-line"><span>Method</span><strong class="ios-link">POST</strong></div>
+                    <div class="action-line"><span>Request Body</span><strong class="ios-link">JSON</strong></div>
+                  </div>
+                  <div class="body-fields">
+                    <div class="body-field"><strong class="field-key">token</strong><span class="field-value">Pigeon 中复制的配对 token</span></div>
+                    <div class="body-field"><strong class="field-key">text</strong><span class="variable"><span class="action-icon icon-text" style="width:18px;height:18px;font-size:11px">≡</span>Text</span></div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="card tight">
-              <div class="row"><span class="ui" data-en="Run After Confirmation" data-zh="运行前询问">Run After Confirmation</span></div>
-              <div class="row">
-                <span class="ui" data-en="Run Immediately" data-zh="立即运行">Run Immediately</span>
-                <span class="check">✓</span>
-              </div>
+              <div class="grow"></div>
+              <div class="home-bar"></div>
             </div>
           </div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 6 · 与 iOS 18.4.1 真机一致的触发条件</figcaption>
-      </figure>
+        </li>
+      </ol>
+    </section>
+
+    <aside id="address" class="address-note">
+      <div class="address-icon" aria-hidden="true">IP</div>
+      <p><strong>电脑 IP 改变后怎么办？</strong><br>重新复制 Pigeon 窗口中的“快捷指令 URL”，只替换 Shortcuts 里 URL 动作的地址。Message 自动化、POST 方法和两个 JSON 字段都不需要重建。</p>
+    </aside>
+
+    <section id="verify" class="verify-box">
+      <h2>最后验证一次</h2>
+      <p>让 iPhone 收到一条同时包含“验证码”和 4～8 位数字的短信。成功时，Pigeon 的“最近事件”会显示“OTP 已复制”。</p>
+      <ol class="verify-flow">
+        <li>收到验证码短信</li>
+        <li>Pigeon 显示“OTP 已复制”</li>
+        <li>Windows 按 Ctrl + V</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page">
+      Pigeon · 本地优先的 iPhone → Windows 验证码剪贴板桥接工具
+      <div class="footer-links"><a href="https://github.com/Eric-H-h/Pigeon">GitHub</a> · <span>@eric</span></div>
     </div>
+  </footer>
 
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 7</div>
-        <h3>运行已有的 Send to Pigeon</h3>
-        <p>iOS 18 在触发条件之后会让你选：新建空白自动化，或使用已有 Shortcut。选 <span class="mono">Send to Pigeon</span>。</p>
-        <div class="warn">
-          <strong>不要选 New Blank Automation</strong>
-          把 Text / URL / Get Contents of URL 直接写进自动化也能跑通，但那份自动化没法作为主要分享物。分享给别人时，应让他们导入普通 Shortcut，再自己选一次「运行该 Shortcut」。
-        </div>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet">
-            <div class="nav-sheet">
-              <span class="left chev">‹</span>
-              <span class="mid ui" data-en="New Automation" data-zh="新建自动化">New Automation</span>
-              <span></span>
-            </div>
-            <div class="card faded">
-              <div class="title-2 ui" data-en="New Blank Automation" data-zh="新建空白自动化">New Blank Automation</div>
-              <div class="sub ui" data-en="Add actions inside this automation" data-zh="在这条自动化里添加动作">Add actions inside this automation</div>
-            </div>
-            <div class="muted ui" style="margin:8px 2px 8px;font-size:13px" data-en="My Shortcuts" data-zh="我的快捷指令">My Shortcuts</div>
-            <div class="card hit">
-              <span class="hit-badge">7</span>
-              <div class="icons">
-                <span class="ic ic-run"><svg viewBox="0 0 16 16" fill="none"><path d="M5 3.5v9l8-4.5-8-4.5z" fill="#fff"/></svg></span>
-              </div>
-              <div class="title-2">Send to Pigeon</div>
-            </div>
-          </div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 7 · 选用已有 Shortcut</figcaption>
-      </figure>
-    </div>
-
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 8</div>
-        <h3>核对 When / Do</h3>
-        <p>完成后点进这条自动化，应看到：</p>
-        <ul class="checklist">
-          <li><strong class="ui" data-en="When" data-zh="当">When</strong>：<span class="ui" data-en="When I Get a Message Containing '验证码'" data-zh="当我收到包含“验证码”的信息时">When I Get a Message Containing '验证码'</span></li>
-          <li><strong class="ui" data-en="Do" data-zh="执行">Do</strong>：运行 <span class="mono">Send to Pigeon</span></li>
-          <li>顶部运行方式是 <span class="ui" data-en="Run Immediately" data-zh="立即运行">Run Immediately</span></li>
-        </ul>
-        <p>点进 Do，确认传入的是短信本身，也就是 <span class="ui" data-en="Shortcut Input" data-zh="快捷指令输入">Shortcut Input</span>。不要改成剪贴板或空输入。</p>
-        <details>
-          <summary>如果我已经把三个动作写在自动化里了？</summary>
-          <p style="margin-top:8px">那就是当前已经跑通的个人 PoC：Do 会显示 <span class="ui" data-en="Text, URL, and Get Contents of URL" data-zh="文本、URL 和获取 URL 内容">Text, URL, and Get Contents of URL</span>。自己用可以不改。要分享给别人时，请把这三个动作搬进普通 Shortcut，自动化只保留「运行该 Shortcut」。</p>
-        </details>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet">
-            <div class="nav-sheet">
-              <span class="left blue ui" data-en="Cancel" data-zh="取消">Cancel</span>
-              <span></span>
-              <span class="right ui" data-en="Done" data-zh="完成">Done</span>
-            </div>
-            <div class="card tight">
-              <div class="row">
-                <span class="ui" data-en="Automation" data-zh="自动化">Automation</span>
-                <span class="muted ui" data-en="Run Immediately" data-zh="立即运行">Run Immediately</span>
-              </div>
-            </div>
-            <div class="section-h ui" data-en="When" data-zh="当">When</div>
-            <div class="card">
-              <div class="icons"><span class="ic ic-msg"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10v7H6l-3 3V4z" fill="#fff"/></svg></span></div>
-              <div class="title-2 ui" data-en="When I Get a Message Containing '验证码'" data-zh="当我收到包含“验证码”的信息时">When I Get a Message Containing '验证码'</div>
-            </div>
-            <div class="section-h ui" data-en="Do" data-zh="执行">Do</div>
-            <div class="card hit">
-              <span class="hit-badge">8</span>
-              <div class="icons"><span class="ic ic-run"><svg viewBox="0 0 16 16" fill="none"><path d="M5 3.5v9l8-4.5-8-4.5z" fill="#fff"/></svg></span></div>
-              <div class="title-2">Send to Pigeon</div>
-            </div>
-          </div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 8 · 完成后的 When / Do</figcaption>
-      </figure>
-    </div>
-
-    <h2 id="verify">第三部分：第一次运行</h2>
-
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 9</div>
-        <h3>允许 Shortcuts 访问电脑</h3>
-        <p>第一次真正发出 HTTP 请求时，iOS 通常会询问是否允许这条 Shortcut 访问该地址。必须选 <strong class="ui" data-en="Allow" data-zh="允许">Allow</strong>。选错一次，后面锁屏转发会静默失败。</p>
-        <p>建议先在<strong>解锁状态</strong>下用一条含「验证码」的短信触发，或点 Shortcut 编辑器里的播放按钮发一次（播放按钮没有短信正文时，Windows 可能返回未识别，但权限弹窗仍会出现）。</p>
-        <div class="note">
-          <strong>Local Network 设置里可能看不到 Shortcuts</strong>
-          真机已经验证：设置里即使不出现 Shortcuts，HTTP 仍然可以成功。不要把「设置里找不到 Shortcuts」当成失败依据。
-        </div>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body sheet" style="filter:blur(2px);opacity:.45">
-            <div class="large-title">Send to Pigeon</div>
-            <div class="card" style="height:120px"></div>
-          </div>
-          <div class="alert hit">
-            <span class="hit-badge">9</span>
-            <h4>Send to Pigeon</h4>
-            <p class="ui" data-en="This shortcut wants to access your PC on the local network." data-zh="此快捷指令想访问局域网上的电脑。">This shortcut wants to access your PC on the local network.</p>
-            <div class="alert-btns">
-              <span class="ui" data-en="Don't Allow" data-zh="不允许">Don't Allow</span>
-              <span class="ui" data-en="Allow" data-zh="允许">Allow</span>
-            </div>
-          </div>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 9 · 首次网络权限，选 Allow</figcaption>
-      </figure>
-    </div>
-
-    <div class="step">
-      <div class="step-copy">
-        <div class="step-index">STEP 10</div>
-        <h3>锁屏再收一条真实验证码</h3>
-        <p>列表里应出现一条个人自动化，标题含 <span class="mono">验证码</span>。然后按实际使用来验收：</p>
-        <ol class="checklist">
-          <li>Windows 服务保持运行。</li>
-          <li>把 iPhone 锁上。</li>
-          <li>在电脑网页点「发送验证码」。</li>
-          <li>短信到达后，不要解锁手机，直接在 Windows <strong>Ctrl+V</strong>。</li>
-        </ol>
-        <p>成功时，电脑上只会看到掩码状态，例如 <span class="mono">6****1</span>，完整验证码只进剪贴板。</p>
-      </div>
-      <figure class="device">
-        <div class="phone"><div class="screen">
-          <div class="island"></div>
-          <div class="ios-body">
-            <div class="head-row">
-              <div class="large-title ui" data-en="Automation" data-zh="自动化">Automation</div>
-              <div class="plus">+</div>
-            </div>
-            <div class="section-h ui" data-en="Personal" data-zh="个人">Personal</div>
-            <div class="card hit">
-              <span class="hit-badge">10</span>
-              <div class="icons">
-                <span class="ic ic-msg"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10v7H6l-3 3V4z" fill="#fff"/></svg></span>
-                <span class="muted">→</span>
-                <span class="ic ic-run"><svg viewBox="0 0 16 16" fill="none"><path d="M5 3.5v9l8-4.5-8-4.5z" fill="#fff"/></svg></span>
-              </div>
-              <div class="title-2 ui" data-en="When I Get a Message Containing '验证码'" data-zh="当我收到包含“验证码”的信息时">When I Get a Message Containing '验证码'</div>
-              <div class="sub">Send to Pigeon</div>
-            </div>
-          </div>
-          <nav class="tabbar">
-            <div class="tab"><div class="glyph">▣</div><span class="ui" data-en="Shortcuts" data-zh="快捷指令">Shortcuts</span></div>
-            <div class="tab on"><div class="glyph">✓</div><span class="ui" data-en="Automation" data-zh="自动化">Automation</span></div>
-            <div class="tab"><div class="glyph">✧</div><span class="ui" data-en="Gallery" data-zh="图库">Gallery</span></div>
-          </nav>
-          <div class="home-bar"></div>
-        </div></div>
-        <figcaption>图 10 · 自动化列表的最终样子</figcaption>
-      </figure>
-    </div>
-
-    <h2 id="ip">地址以后会变怎么办</h2>
-    <p>这是别人用起来最常见的痛点。Shortcut 里保存的是你填进去的数字地址。Windows 热点关闭再开、换了网卡或路由器重新分配地址后，IP 可能变化。</p>
-    <div class="table-scroll">
-    <table>
-      <thead><tr><th>你现在填的是</th><th>IP 变了以后</th></tr></thead>
-      <tbody>
-        <tr>
-          <td>窗口当前显示的数字地址，例如 <span class="mono">192.168.5.101</span></td>
-          <td>复制窗口里的新地址，打开 <span class="mono">Send to Pigeon</span>，只改 URL 动作中的 IP。自动化不用重建。</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-    <div class="note">
-      <strong>改地址只改普通 Shortcut</strong>
-      这就是拆成两块的好处：个人自动化仍然监听「验证码」，只有 URL 那一处要更新。Pigeon 不再使用 .local 名称。
-    </div>
-
-    <h2 id="names">中英文界面对照</h2>
-    <p>作者真机是英文。若你的 iPhone 为中文，用下表找对应项；或把本页右上角切到「中文」看插图。</p>
-    <div class="table-scroll">
-    <table>
-      <thead><tr><th>English</th><th>中文</th></tr></thead>
-      <tbody>
-        <tr><td>Shortcuts</td><td>快捷指令</td></tr>
-        <tr><td>Automation / Personal</td><td>自动化 / 个人</td></tr>
-        <tr><td>Message</td><td>信息</td></tr>
-        <tr><td>Message Contains</td><td>信息包含</td></tr>
-        <tr><td>Run Immediately</td><td>立即运行</td></tr>
-        <tr><td>Run After Confirmation</td><td>运行前询问</td></tr>
-        <tr><td>New Blank Automation</td><td>新建空白自动化</td></tr>
-        <tr><td>Text</td><td>文本</td></tr>
-        <tr><td>Get Contents of URL</td><td>获取 URL 内容</td></tr>
-        <tr><td>Show More / Method / Request Body</td><td>显示更多 / 方法 / 请求正文</td></tr>
-        <tr><td>Shortcut Input</td><td>快捷指令输入</td></tr>
-      </tbody>
-    </table>
-    </div>
-
-    <h2 id="faq">常见问题</h2>
-    <details open>
-      <summary>锁屏没有反应</summary>
-      <p style="margin-top:8px">先确认运行方式是 Run Immediately，而不是 Run After Confirmation。再确认自动化仍处于启用状态。最后用 Safari 再打开一次 <span class="mono">/health</span>，排除网络。</p>
-    </details>
-    <details>
-      <summary>Windows 提示 Token 错误</summary>
-      <p style="margin-top:8px">JSON 的 <span class="mono">token</span> 必须和电脑上当前 Token 完全一致。重新生成 Token 后，旧 Shortcut 会立刻失效，需要再贴一次。</p>
-    </details>
-    <details>
-      <summary>电脑收到请求但没有验证码</summary>
-      <p style="margin-top:8px">说明 HTTP 已经通了，是提取规则没有找到唯一的 4–8 位数字。把短信里「验证码」附近的数字格式记下来。iPhone 端不要自己截取数字。</p>
-    </details>
-    <details>
-      <summary>同一 Wi-Fi 却互相访问不了</summary>
-      <p style="margin-top:8px">公共网络常开 AP / Client Isolation。改用 Windows 移动热点，不要继续调路由器。</p>
-    </details>
-    <details>
-      <summary>以后导入别人分享的 Shortcut 文件</summary>
-      <p style="margin-top:8px">导入时会问 PC Address 和 Pairing Token，不会带上作者的地址。系统可能要求打开「允许不受信任的快捷指令」。导入后，你仍然要自己创建一次 Message 自动化。</p>
-    </details>
-
-    <footer class="foot">
-      <p>插图按 iOS 18.4.1 英文 Shortcuts 还原，其中 Automation 列表、When/Do、Message 条件、动作编辑器对照了真机截图。触发器列表、选择已有 Shortcut、POST 展开页和权限弹窗未包含在原始四张截图中，按同版本界面惯例简化绘制。Windows 程序界面不在本页范围内。</p>
-      <p>Pigeon 只消除「拿手机看验证码」这一步。它不会替你点「发送验证码」，也不会替你提交表单。</p>
-    </footer>
-  </div>
+  <dialog id="image-viewer" aria-label="截图放大预览">
+    <button class="dialog-close" type="button" aria-label="关闭预览">×</button>
+    <img alt="">
+  </dialog>
 
   <script>
-    (function () {
-      const buttons = {
-        en: document.getElementById("lang-en"),
-        zh: document.getElementById("lang-zh")
-      };
+    const viewer = document.querySelector('#image-viewer');
+    const viewerImage = viewer.querySelector('img');
+    const closeButton = viewer.querySelector('.dialog-close');
 
-      function setLang(lang) {
-        document.querySelectorAll(".ui").forEach(function (el) {
-          const value = el.getAttribute("data-" + lang);
-          if (value) el.textContent = value;
-        });
-        buttons.en.setAttribute("aria-pressed", lang === "en" ? "true" : "false");
-        buttons.zh.setAttribute("aria-pressed", lang === "zh" ? "true" : "false");
-      }
-
-      buttons.en.addEventListener("click", function () { setLang("en"); });
-      buttons.zh.addEventListener("click", function () { setLang("zh"); });
-
-      document.querySelectorAll("[data-copy]").forEach(function (btn) {
-        btn.addEventListener("click", async function () {
-          const text = btn.getAttribute("data-copy");
-          try {
-            await navigator.clipboard.writeText(text);
-            const old = btn.textContent;
-            btn.textContent = "已复制";
-            setTimeout(function () { btn.textContent = old; }, 1200);
-          } catch (err) {
-            btn.textContent = "复制失败";
-          }
-        });
+    document.querySelectorAll('[data-full]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const image = button.querySelector('img');
+        viewerImage.src = button.dataset.full;
+        viewerImage.alt = image.alt;
+        viewer.showModal();
       });
-    })();
+    });
+
+    closeButton.addEventListener('click', () => viewer.close());
+    viewer.addEventListener('click', (event) => {
+      if (event.target === viewer) viewer.close();
+    });
   </script>
 </body>
 </html>
