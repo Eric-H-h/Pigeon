@@ -17,6 +17,12 @@
 现在：网站发送验证码 → 你直接按 Ctrl + V
 ```
 
+<p align="center">
+  <a href="https://eric-h-h.github.io/Pigeon/guide/iphone-shortcuts.html">
+    <img src="guide/assets/pigeon-setup/pigeon-main-window.png" alt="Pigeon Windows 主界面，显示快捷指令 URL、配对 token 和可用 IP 地址" width="760">
+  </a>
+</p>
+
 Pigeon 只负责把验证码送到剪贴板，不会替你点击“发送验证码”、自动填写其他个人信息或提交简历。最终操作仍由你确认。
 
 ## 软件介绍
