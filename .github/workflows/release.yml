@@ -21,8 +21,6 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-build.lock
       - run: python -m pip install -r requirements-build.lock
-        env:
-          SKIP_CYTHON: "1"
       - run: python -m pip install --no-build-isolation --no-deps -e .
       - run: python -m pytest
       - run: python scripts/check_docs.py
@@ -32,12 +30,10 @@ jobs:
           New-Item -ItemType Directory -Force release/OTPigeon | Out-Null
           Copy-Item dist/OTPigeon.exe, LICENSE, README.md, QUICKSTART.md, RELEASE_NOTES.md, SECURITY.md, THIRD_PARTY_NOTICES.md release/OTPigeon/
           Copy-Item guide release/OTPigeon/guide -Recurse
-          Copy-Item docs release/OTPigeon/docs -Recurse
+          New-Item -ItemType Directory -Force release/OTPigeon/docs | Out-Null
+          Copy-Item docs/architecture.md, docs/development-history.md, docs/development.md, docs/privacy-and-security.md, docs/troubleshooting.md release/OTPigeon/docs/
           Copy-Item shortcuts release/OTPigeon/shortcuts -Recurse
           Copy-Item licenses release/OTPigeon/licenses -Recurse
-          New-Item -ItemType Directory -Force release/OTPigeon/third-party-source | Out-Null
-          python scripts/fetch_third_party_sources.py release/OTPigeon/third-party-source
-          git archive --format=zip --output=release/OTPigeon/third-party-source/otpigeon-source.zip HEAD
           Compress-Archive -Path release/OTPigeon -DestinationPath release/OTPigeon-windows-x64.zip
           $hash = (Get-FileHash -Algorithm SHA256 release/OTPigeon-windows-x64.zip).Hash.ToLowerInvariant()
           "$hash  OTPigeon-windows-x64.zip" | Set-Content -Encoding ascii release/OTPigeon-windows-x64.zip.sha256

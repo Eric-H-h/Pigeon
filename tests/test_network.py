@@ -1,17 +1,8 @@
 from otpigeon.network import (
     CandidateAddress,
-    LocalEndpointPublisher,
+    LocalAddressMonitor,
     is_supported_private_ipv4,
 )
-
-
-class FakeRegistration:
-    def __init__(self, *args) -> None:
-        self.args = args
-        self.closed = False
-
-    def close(self) -> None:
-        self.closed = True
 
 
 def test_supported_addresses_are_limited_to_rfc1918() -> None:
@@ -24,43 +15,40 @@ def test_supported_addresses_are_limited_to_rfc1918() -> None:
     assert not is_supported_private_ipv4("8.8.8.8")
 
 
-def test_publisher_registers_each_interface_independently() -> None:
+def test_monitor_reports_each_private_interface() -> None:
     candidates = (
         CandidateAddress("Wi-Fi", "192.168.0.10"),
         CandidateAddress("Hotspot", "192.168.137.1"),
     )
-    registrations: list[FakeRegistration] = []
+    monitor = LocalAddressMonitor(candidate_provider=lambda: candidates)
 
-    def factory(*args):
-        registration = FakeRegistration(*args)
-        registrations.append(registration)
-        return registration
-
-    publisher = LocalEndpointPublisher(
-        "a" * 32,
-        8765,
-        candidate_provider=lambda: candidates,
-        registration_factory=factory,
-    )
-
-    snapshot = publisher.refresh()
-    publisher.stop()
+    snapshot = monitor.refresh()
 
     assert snapshot.state == "running"
     assert set(snapshot.addresses) == set(candidates)
-    assert len(registrations) == 2
-    assert all(registration.closed for registration in registrations)
 
 
-def test_publisher_degrades_without_private_address() -> None:
-    publisher = LocalEndpointPublisher(
-        "b" * 32,
-        8765,
-        candidate_provider=lambda: (),
-        registration_factory=FakeRegistration,
-    )
+def test_monitor_degrades_without_private_address() -> None:
+    monitor = LocalAddressMonitor(candidate_provider=lambda: ())
 
-    snapshot = publisher.refresh()
+    snapshot = monitor.refresh()
 
     assert snapshot.state == "degraded"
     assert snapshot.addresses == ()
+
+
+def test_monitor_reports_address_changes() -> None:
+    current = [CandidateAddress("WLAN", "192.168.5.101")]
+    changes = []
+    monitor = LocalAddressMonitor(
+        on_change=changes.append,
+        candidate_provider=lambda: tuple(current),
+    )
+
+    first = monitor.refresh()
+    current[0] = CandidateAddress("WLAN", "192.168.5.102")
+    second = monitor.refresh()
+
+    assert first.addresses[0].address == "192.168.5.101"
+    assert second.addresses[0].address == "192.168.5.102"
+    assert changes == [first, second]

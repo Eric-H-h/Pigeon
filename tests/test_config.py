@@ -14,8 +14,8 @@ def test_load_or_create_persists_configuration(tmp_path) -> None:
 
     assert first == second
     assert first.schema_version == SCHEMA_VERSION
-    assert first.hostname.startswith("otpigeon-")
-    assert first.base_url.endswith(":8765")
+    assert first.install_id
+    assert first.port == 8765
 
 
 def test_regenerate_token_preserves_device_identity(tmp_path) -> None:

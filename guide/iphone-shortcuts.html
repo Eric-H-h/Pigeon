@@ -684,7 +684,7 @@
         <p>页面出现 <span class="mono">OK</span> 字样就可以往下走。这一步能排除「根本没连上」：热点、防火墙、地址填错，都会在这里暴露。</p>
         <div class="warn">
           <strong>还没 OK？先别配 Shortcuts</strong>
-          确认 iPhone 连的是电脑热点，Windows 防火墙只允许专用网络，并且地址没有写成 127.0.0.1。
+          确认 iPhone 与电脑在同一可信局域网，Windows 当前连接和 OTPigeon 防火墙权限都使用专用网络，并且地址没有写成 127.0.0.1。如果只有切成公用网络才成功，说明防火墙权限勾反了。
         </div>
       </div>
       <figure class="device">
@@ -1150,25 +1150,21 @@
     </div>
 
     <h2 id="ip">地址以后会变怎么办</h2>
-    <p>这是别人用起来最常见的痛点。Shortcut 里保存的是你填进去的那串地址。Windows 热点关闭再开、换了网卡、开了 VPN，数字 IP 都可能变。</p>
+    <p>这是别人用起来最常见的痛点。Shortcut 里保存的是你填进去的数字地址。Windows 热点关闭再开、换了网卡或路由器重新分配地址后，IP 可能变化。</p>
     <div class="table-scroll">
     <table>
       <thead><tr><th>你现在填的是</th><th>IP 变了以后</th></tr></thead>
       <tbody>
         <tr>
-          <td>数字地址，例如 <span class="mono">192.168.137.1</span></td>
-          <td>打开 <span class="mono">Send to OTPigeon</span>，改 URL 动作。自动化不用重建。</td>
-        </tr>
-        <tr>
-          <td>以后 Windows 提供的 <span class="mono">otpigeon-xxxx.local</span> 稳定名称</td>
-          <td>名称不变，一般不用改 Shortcut。这是 V0.2 的主方案，以电脑窗口实际显示为准。</td>
+          <td>窗口当前显示的数字地址，例如 <span class="mono">192.168.5.101</span></td>
+          <td>复制窗口里的新地址，打开 <span class="mono">Send to OTPigeon</span>，只改 URL 动作中的 IP。自动化不用重建。</td>
         </tr>
       </tbody>
     </table>
     </div>
     <div class="note">
       <strong>改地址只改普通 Shortcut</strong>
-      这就是拆成两块的好处：个人自动化仍然监听「验证码」，只有 URL 那一处要更新。
+      这就是拆成两块的好处：个人自动化仍然监听「验证码」，只有 URL 那一处要更新。OTPigeon 不再使用 .local 名称。
     </div>
 
     <h2 id="names">中英文界面对照</h2>

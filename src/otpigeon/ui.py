@@ -35,7 +35,9 @@ class OTPigeonWindow:
             row=1, column=1, columnspan=2, sticky="w", pady=5
         )
 
-        ttk.Label(frame, text="PC address").grid(row=2, column=0, sticky="w", pady=5)
+        ttk.Label(frame, text="PC address (current IP)").grid(
+            row=2, column=0, sticky="w", pady=5
+        )
         self.address_var = tk.StringVar()
         address_entry = ttk.Entry(frame, textvariable=self.address_var, state="readonly")
         address_entry.grid(row=2, column=1, sticky="ew", padx=(10, 8), pady=5)
@@ -100,7 +102,7 @@ class OTPigeonWindow:
             "No private IPv4 address detected. Enable Windows Mobile Hotspot.",
         )
         if snapshot.network_error:
-            lines = lines + (f"mDNS: {snapshot.network_error}",)
+            lines = lines + (f"Network: {snapshot.network_error}",)
         self.addresses.configure(state="normal")
         self.addresses.delete("1.0", "end")
         self.addresses.insert("1.0", "\n".join(lines))
@@ -142,11 +144,11 @@ class OTPigeonWindow:
     def _show_setup_help(self) -> None:
         messagebox.showinfo(
             "OTPigeon setup",
-            "1. Connect the iPhone to Windows Mobile Hotspot.\n"
-            "2. Install the Send to OTPigeon Shortcut.\n"
-            "3. Enter the PC address and pairing token shown here.\n"
-            "4. Run the Shortcut once to check the connection.\n"
-            "5. Create a Message Personal Automation that runs immediately.",
+            "1. Set the Windows Wi-Fi network profile to Private.\n"
+            "2. Allow OTPigeon through Windows Firewall on Private networks only.\n"
+            "3. Connect the iPhone to the same trusted router or Windows hotspot.\n"
+            "4. Enter the current PC address and pairing token in the Shortcut.\n"
+            "5. Run the Shortcut once, then create a Message Personal Automation.",
             parent=self.root,
         )
 

@@ -7,7 +7,7 @@ import threading
 
 from .clipboard import copy_sensitive
 from .config import AppConfig, ConfigError, ConfigStore
-from .network import LocalEndpointPublisher, NetworkSnapshot
+from .network import LocalAddressMonitor, NetworkSnapshot
 from .server import BridgeEvent, BridgeServer
 
 
@@ -29,9 +29,7 @@ class AppController:
         self._config = self._config_store.load_or_create()
         self._lock = threading.Lock()
         self._last_event = "Ready to start"
-        self._network_snapshot = NetworkSnapshot(
-            self._config.hostname, (), "stopped"
-        )
+        self._network_snapshot = NetworkSnapshot((), "stopped")
         self._server = BridgeServer(
             "0.0.0.0",
             self._config.port,
@@ -39,18 +37,14 @@ class AppController:
             clipboard_writer=copy_sensitive,
             event_sink=self._on_bridge_event,
         )
-        self._publisher = LocalEndpointPublisher(
-            self._config.install_id,
-            self._config.port,
-            on_change=self._on_network_change,
-        )
+        self._network_monitor = LocalAddressMonitor(on_change=self._on_network_change)
 
     def start(self) -> None:
         self._server.start()
-        self._publisher.start()
+        self._network_monitor.start()
 
     def stop(self) -> None:
-        self._publisher.stop()
+        self._network_monitor.stop()
         self._server.stop()
 
     def snapshot(self) -> AppSnapshot:
@@ -70,9 +64,13 @@ class AppController:
             f"{candidate.interface_name}: http://{candidate.address}:{config.port}"
             for candidate in network.addresses
         )
+        if network.addresses:
+            address = f"http://{network.addresses[0].address}:{config.port}"
+        else:
+            address = "No private IPv4 address detected"
         return AppSnapshot(
             status=status,
-            address=config.base_url,
+            address=address,
             numeric_addresses=numeric_addresses,
             token=config.token,
             last_event=last_event,
@@ -103,7 +101,7 @@ class AppController:
         with self._lock:
             self._network_snapshot = snapshot
             if snapshot.state == "running":
-                self._last_event = self._timestamp("Local address published")
+                self._last_event = self._timestamp("Local IP address updated")
             elif snapshot.error:
                 self._last_event = self._timestamp(
                     f"Local address unavailable: {snapshot.error}"

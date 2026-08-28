@@ -1,14 +1,9 @@
-from PyInstaller.utils.hooks import collect_submodules
-
-
-hiddenimports = collect_submodules("zeroconf")
-
 a = Analysis(
     ["run_otpigeon.py"],
     pathex=["src"],
     binaries=[],
     datas=[],
-    hiddenimports=hiddenimports,
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

@@ -24,19 +24,6 @@ class AppConfig:
     token: str
     port: int
 
-    @property
-    def short_id(self) -> str:
-        return self.install_id[:8]
-
-    @property
-    def hostname(self) -> str:
-        return f"otpigeon-{self.short_id}.local"
-
-    @property
-    def base_url(self) -> str:
-        return f"http://{self.hostname}:{self.port}"
-
-
 def default_config_path() -> Path:
     local_app_data = os.environ.get("LOCALAPPDATA")
     if local_app_data:
