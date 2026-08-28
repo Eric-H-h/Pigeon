@@ -13,7 +13,7 @@ py -3.12 -m venv .venv
 .venv\Scripts\python -m pytest
 ```
 
-运行时依赖只有 `ifaddr`，用于枚举本机网络接口。V0.2.0 Alpha 7 不使用 `python-zeroconf` 或 mDNS 发布逻辑。
+运行时依赖只有 `ifaddr`，用于枚举本机网络接口。V0.2.0 Alpha 8 不使用 `python-zeroconf` 或 mDNS 发布逻辑。
 
 ## 本地运行
 

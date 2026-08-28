@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "otpigeon"
-version = "0.2.0a7"
+version = "0.2.0a8"
 description = "Local-first iPhone to Windows OTP clipboard bridge"
 readme = "README.md"
 requires-python = ">=3.10"

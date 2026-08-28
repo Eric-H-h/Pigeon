@@ -1,9 +1,11 @@
-# OTPigeon V0.2.0 Alpha 7
+# OTPigeon V0.2.0 Alpha 8
 
 这是只供项目所有者真机验证的本地构建，当前分支尚未推送 GitHub，也未合并到 `main`。
 
 ## 本版变化
 
+- 中文界面的应用名改为“信鸽”，English 界面的应用名改为 `Pigeon`，标题栏与窗口标题同步切换。
+- 窗口底部增加项目链接 `github.com/Eric-H-h/OTPigeon` 和作者署名 `@eric`；项目链接可点击并使用默认浏览器打开。
 - 上方输入框改为“快捷指令 URL”，直接显示 `http://当前IP:8765/otp`；复制后可以原样粘贴进 Shortcut。
 - 下方“可用 IP 地址”继续列出每个私有网卡的基础地址，方便排查多网卡和 IP 变化。
 - 窗口右上角新增 `Language`，支持“中文”和 `English`。

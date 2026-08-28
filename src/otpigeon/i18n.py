@@ -8,6 +8,7 @@ LANGUAGE_NAMES = {"zh-CN": "中文", "en": "English"}
 
 _TEXT = {
     "zh-CN": {
+        "app_name": "信鸽",
         "status": "状态",
         "shortcut_url": "快捷指令 URL",
         "pairing_token": "配对 token",
@@ -29,16 +30,17 @@ _TEXT = {
         "regenerate_message": "现有 iPhone Shortcut 将停止工作，直到你更新其中的 token。",
         "regenerate_error": "无法重新生成 token",
         "language_error": "无法保存 Language",
-        "setup_title": "OTPigeon 设置",
+        "setup_title": "信鸽设置",
         "setup_message": (
             "1. 将 Windows Wi-Fi 网络配置文件设为 Private（专用网络）。\n"
-            "2. 只允许 OTPigeon 通过 Private 网络的 Windows 防火墙。\n"
+            "2. 只允许信鸽通过 Private 网络的 Windows 防火墙。\n"
             "3. 将 iPhone 连接到同一台可信路由器或 Windows 移动热点。\n"
             "4. 把窗口中的快捷指令 URL 和配对 token 填入 Shortcut。\n"
             "5. 先手动运行 Shortcut，再创建短信个人自动化。"
         ),
     },
     "en": {
+        "app_name": "Pigeon",
         "status": "Status",
         "shortcut_url": "Shortcut URL",
         "pairing_token": "Pairing token",
@@ -60,10 +62,10 @@ _TEXT = {
         "regenerate_message": "The existing iPhone Shortcut will stop working until you update its token.",
         "regenerate_error": "Could not regenerate token",
         "language_error": "Could not save Language",
-        "setup_title": "OTPigeon setup",
+        "setup_title": "Pigeon setup",
         "setup_message": (
             "1. Set the Windows Wi-Fi network profile to Private.\n"
-            "2. Allow OTPigeon through Windows Firewall on Private networks only.\n"
+            "2. Allow Pigeon through Windows Firewall on Private networks only.\n"
             "3. Connect the iPhone to the same trusted router or Windows hotspot.\n"
             "4. Enter the Shortcut URL and pairing token shown here.\n"
             "5. Run the Shortcut once, then create a Message Personal Automation."

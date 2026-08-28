@@ -1,11 +1,17 @@
 from __future__ import annotations
 
 import tkinter as tk
+import webbrowser
 from tkinter import messagebox, ttk
 from typing import Any
 
 from .clipboard import ClipboardError
 from .i18n import LANGUAGE_NAMES, text, translate_event, translate_status
+
+
+PROJECT_URL = "https://github.com/Eric-H-h/OTPigeon"
+PROJECT_URL_DISPLAY = "github.com/Eric-H-h/OTPigeon"
+AUTHOR_CREDIT = "@eric"
 
 
 class OTPigeonWindow:
@@ -15,7 +21,7 @@ class OTPigeonWindow:
         self._token_visible = False
         self._language = controller.snapshot().language
 
-        root.title("OTPigeon")
+        root.title(text(self._language, "app_name"))
         root.geometry("680x470")
         root.minsize(620, 430)
         root.protocol("WM_DELETE_WINDOW", self._close)
@@ -27,7 +33,8 @@ class OTPigeonWindow:
         frame.columnconfigure(1, weight=1)
         frame.rowconfigure(5, weight=1)
 
-        ttk.Label(frame, text="OTPigeon", font=("Segoe UI", 20, "bold")).grid(
+        self.app_name_label = ttk.Label(frame, font=("Segoe UI", 20, "bold"))
+        self.app_name_label.grid(
             row=0, column=0, columnspan=2, sticky="w", pady=(0, 12)
         )
 
@@ -94,12 +101,31 @@ class OTPigeonWindow:
 
         actions = ttk.Frame(frame)
         actions.grid(row=6, column=0, columnspan=3, sticky="ew", pady=(18, 0))
-        self.help_button = ttk.Button(actions, command=self._show_setup_help)
+        actions.columnconfigure(1, weight=1)
+
+        left_actions = ttk.Frame(actions)
+        left_actions.grid(row=0, column=0, sticky="w")
+        self.help_button = ttk.Button(left_actions, command=self._show_setup_help)
         self.help_button.pack(side="left")
-        self.regenerate_button = ttk.Button(actions, command=self._regenerate_token)
+        self.regenerate_button = ttk.Button(
+            left_actions, command=self._regenerate_token
+        )
         self.regenerate_button.pack(side="left", padx=8)
+
+        footer = ttk.Frame(actions)
+        footer.grid(row=0, column=1)
+        self.project_link = ttk.Label(
+            footer,
+            text=PROJECT_URL_DISPLAY,
+            foreground="#0067c0",
+            cursor="hand2",
+        )
+        self.project_link.pack(side="left")
+        self.project_link.bind("<Button-1>", self._open_project_url)
+        ttk.Label(footer, text=AUTHOR_CREDIT).pack(side="left", padx=(8, 0))
+
         self.exit_button = ttk.Button(actions, command=self._close)
-        self.exit_button.pack(side="right")
+        self.exit_button.grid(row=0, column=2, sticky="e")
 
         self._apply_language()
         self._refresh()
@@ -177,6 +203,9 @@ class OTPigeonWindow:
             parent=self.root,
         )
 
+    def _open_project_url(self, _event: object) -> None:
+        webbrowser.open(PROJECT_URL, new=2)
+
     def _change_language(self, _event: object) -> None:
         selected = self.language_var.get()
         language = next(
@@ -199,6 +228,9 @@ class OTPigeonWindow:
         self._apply_language()
 
     def _apply_language(self) -> None:
+        app_name = text(self._language, "app_name")
+        self.root.title(app_name)
+        self.app_name_label.configure(text=app_name)
         self.status_label.configure(text=text(self._language, "status"))
         self.url_label.configure(text=text(self._language, "shortcut_url"))
         self.token_label.configure(text=text(self._language, "pairing_token"))

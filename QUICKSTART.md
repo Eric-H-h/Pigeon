@@ -1,6 +1,6 @@
 # OTPigeon 快速开始
 
-> V0.2.0 Alpha 7 是本地验证版。它直接使用 Windows 当前的私有 IPv4 地址，不使用 `.local` 名称。不要在公共 Wi-Fi 上使用。
+> V0.2.0 Alpha 8 是本地验证版。它直接使用 Windows 当前的私有 IPv4 地址，不使用 `.local` 名称。不要在公共 Wi-Fi 上使用。
 
 ## 1. Windows
 
